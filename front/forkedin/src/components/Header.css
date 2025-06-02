@@ -1,0 +1,48 @@
+.header {
+    background-color: #FEFAE0;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 1rem 2rem;
+    /* border: 2px solid #333; */
+    position: fixed;          
+    top: 0;                   
+    left: 0;
+    width: 100%;                        
+    box-sizing: border-box;   
+}
+
+.dalink {
+    flex-direction: row;
+    display: flex;
+}
+
+.nav-links a {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: #2b2b2b;
+  font-size: 1.2rem;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+
+.logout-button {
+  background-color: orange;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+}
