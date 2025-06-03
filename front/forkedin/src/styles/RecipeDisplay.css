@@ -33,9 +33,14 @@
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 25px;
   padding: 20px 0;
+  position: relative;
+  /* margin:0px, auto; */
+  align-self: center;
+  margin-left: 10%;
+  max-width: 80%;
 }
 
 .card {
@@ -46,12 +51,26 @@
   flex-direction: column;
   gap: 8px;
   text-align: center;
+  /* max-height: 380px;
+  max-width: 260px;
+  min-height: 380px; */
+  height: 380px;
+  width:260px;
+  margin-right: 0px;
+  margin-left: 0px;
+  /* align-self: center; */
+  box-shadow: 1px 1px 2px 2px gray;
+}
+
+.card:hover {
+  transform: translate(-5px, -5px);
 }
 
 .image-placeholder {
   background-color: #d3d3d3;
-  height: 150px;
+  height: 200px;
   border-radius: 5px;
+  overflow: hidden;
 }
 
 .card-name {
