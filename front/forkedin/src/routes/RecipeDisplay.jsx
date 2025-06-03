@@ -66,8 +66,10 @@ export default function RecipeDisplay() {
           {recipe.image && <img src={recipe.image} alt={recipe.label} />}
         </div>
         <div className="card-name">{recipe.label}</div>
+        <div className="divider"></div>
         <div className="card-info">
           <div><strong>{Math.round(recipe.calories)}</strong> calories</div>
+          <div className="divider2"></div>
           <div>
             <div>{recipe.yield} servings</div>
             <div>{recipe.ingredients?.length || 0} ingredients</div>
