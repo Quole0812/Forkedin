@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "../styles/RecipeDisplay.css"
 import axios from "axios";
 
@@ -14,7 +14,7 @@ export default function RecipeDisplay() {
       console.log("my fellow brother, let's search for this shi");
       try {
         console.log(searchTerm)
-        const res = await axios.get(`http://localhost:5001/recipedisplay/recipes/official?query=${searchTerm}`)
+        const res = await axios.get(`http://localhost:5001/recipedisplay/official?query=${searchTerm}`)
         setRecipes(res.data);
         console.log(res);
         console.log(res.data);
@@ -24,8 +24,20 @@ export default function RecipeDisplay() {
 
     }
 
+    useEffect(() => {
+      async function fetchRecipes() {
+        try {
+          const res = await axios.get(`http://localhost:5001/recipedisplay/default?query=Indian`)
+          setRecipes(res.data);
+          console.log(res.data);
+        } catch (error) {
+          console.error("bruh where the chicken at")
+        }
+      }
+  
+      fetchRecipes();
+    }, []);
 
-    
 
 
 
@@ -46,19 +58,24 @@ export default function RecipeDisplay() {
             <button className="button-green" onClick={handleSearch}/>
         </div>
         <div className="grid-container">
-      {Array(8).fill().map((_, i) => (
-        <div className="card" key={i}>
-          <div className="image-placeholder" />
-          <div className="card-name">Name</div>
-          <div className="card-info">
-            <div><strong>#</strong> calories</div>
-            <div>
-              <div># serving size</div>
-              <div># ingredients</div>
-            </div>
+      {recipes.map((item, i) => {
+  const recipe = item.recipe;
+    return (
+      <div className="card" key={i}>
+        <div className="image-placeholder">
+          {recipe.image && <img src={recipe.image} alt={recipe.label} />}
+        </div>
+        <div className="card-name">{recipe.label}</div>
+        <div className="card-info">
+          <div><strong>{Math.round(recipe.calories)}</strong> calories</div>
+          <div>
+            <div>{recipe.yield} servings</div>
+            <div>{recipe.ingredients?.length || 0} ingredients</div>
           </div>
         </div>
-      ))}
+      </div>
+    );
+  })}
     </div>
 
         </>
