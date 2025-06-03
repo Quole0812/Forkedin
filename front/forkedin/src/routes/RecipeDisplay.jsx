@@ -27,7 +27,7 @@ export default function RecipeDisplay() {
     useEffect(() => {
       async function fetchRecipes() {
         try {
-          const res = await axios.get(`http://localhost:5001/recipedisplay/official?query=chicken`)
+          const res = await axios.get(`http://localhost:5001/recipedisplay/default?query=Indian`)
           setRecipes(res.data);
           console.log(res.data);
         } catch (error) {

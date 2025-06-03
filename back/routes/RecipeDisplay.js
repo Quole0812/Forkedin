@@ -8,15 +8,15 @@ const router = express.Router();
 
 
 
-//get route 
+//get default route 
 
-router.get("/official", async (req, res) => {
+router.get("/default", async (req, res) => {
   const { query } = req.query;
   try {
     const edamamRes = await axios.get("https://api.edamam.com/api/recipes/v2", {
       params: {
         type: "public",
-        q: query,
+        cuisineType: query,
         app_id: process.env.EDAMAM_APP_ID,
         app_key: process.env.EDAMAM_APP_KEY,
         to: 10
@@ -33,6 +33,9 @@ router.get("/official", async (req, res) => {
     res.status(500).json({ error: "my fellow brother of america, we failed to get recipe" });
   }
 });
+
+
+
 
 
 //get recipe of a user
