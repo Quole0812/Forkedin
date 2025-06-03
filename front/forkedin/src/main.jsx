@@ -6,6 +6,7 @@ import { AuthProvider } from './components/AuthContext.jsx';
 import Header from './components/Header.jsx';
 import Login from './routes/login.jsx';
 import SignUp from './routes/signUp.jsx';
+import Home from './routes/Home.jsx';
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <div>Home Page Content</div>
+        element: <Home />
       },
       {
         path: 'login',
