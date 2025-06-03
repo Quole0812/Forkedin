@@ -10,7 +10,7 @@ const router = express.Router();
 
 //get route 
 
-router.get("recipes/official", async (req, res) => {
+router.get("/official", async (req, res) => {
   const { query } = req.query;
   try {
     const edamamRes = await axios.get("https://api.edamam.com/api/recipes/v2", {

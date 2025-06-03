@@ -33,9 +33,11 @@
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 25px;
   padding: 20px 0;
+  position: relative;
+  /* margin:0px, auto; */
 }
 
 .card {
@@ -46,12 +48,19 @@
   flex-direction: column;
   gap: 8px;
   text-align: center;
+  max-height: 380px;
+  max-width: 260px;
+  min-height: 380px;
+  margin-right: 0px;
+  margin-left: 0px;
+  
 }
 
 .image-placeholder {
   background-color: #d3d3d3;
-  height: 150px;
+  height: 200px;
   border-radius: 5px;
+  overflow: hidden;
 }
 
 .card-name {
