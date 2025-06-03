@@ -114,3 +114,131 @@ section {
 .alt-bg {
   background-color: #ffffff;
 }
+
+/* === DISCOVER SECTION === */
+.discover-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+
+.discover-subtitle {
+  font-size: 1.1rem;
+  color: #444;
+  margin-top: 0.25rem;
+  margin-bottom: 3rem;
+  max-width: 600px;
+}
+
+.discover-container h2 {
+  margin-bottom: 0.5rem;
+}
+
+.carousel-wrapper {
+  width: 100%;
+  max-width: 600px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Rectangle (carousel item) styles */
+.carousel-item {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  background-color: #e0e0e0; /* soft gray */
+  border-radius: 20px;       /* rounded corners */
+  height: 420px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Carousel dots */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.carousel-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #bbb;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+/* Active dot: larger and darker */
+.carousel-dots .dot.active {
+  width: 16px;
+  height: 16px;
+  background-color: #333;
+  opacity: 1;
+}
+
+
+/* === Carousel dots (CLEAN VERSION) === */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.carousel-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #bbb;
+  opacity: 0.6;
+  transition: transform 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
+  transform-origin: center;
+}
+
+.carousel-dots .dot.active {
+  transform: scale(1);
+  background-color: #575757;
+  opacity: 1;
+}
+
+
+.explore-button {
+  background-color: #34620c;
+  color: white;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.explore-button:hover {
+  background-color: #1E3807;
+}
