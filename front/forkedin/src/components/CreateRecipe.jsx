@@ -12,14 +12,19 @@ export default function CreateRecipe() {
     const [inputsEnabled, setInputsEnabled] = useState(false);
     const [recipeName, setRecipeName] = useState("");
     const [loading, setLoading] = useState(false);
+    const [ingredient, setIngredient] = useState({});
 
     useEffect(() => {
         setInputsEnabled(recipeName.trim().length > 0);
     }, [recipeName])
 
-    const handleSetRecipe = (recipeValue) => {
+    const handleSetRecipeName = (recipeNameValue) => {
         if (loading) return;
-        setRecipeName(recipeValue);
+        setRecipeName(recipeNameValue);
+    }
+
+    const handleSetIngredient = (ingredientValues) => {
+        if (loading) return;
     }
     
     const handleClick = () => {
@@ -33,7 +38,7 @@ export default function CreateRecipe() {
                     <input 
                         className='cr-input2'
                         placeholder='Enter a name for your new recipe'
-                        onChange={(e) => handleSetRecipe(e.target.value)}                    
+                        onChange={(e) => handleSetRecipeName(e.target.value)}                    
                     />
                     <div className='cr-directions-left-container'>
                         <h2 className='cr-h2-ingredients'>Ingredients</h2>
