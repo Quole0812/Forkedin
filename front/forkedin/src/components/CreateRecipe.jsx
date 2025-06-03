@@ -6,10 +6,22 @@ import { createTheme } from '@mui/material/styles';
 
 import Header from './Header.jsx';
 import '../styles/CreateRecipe.css'
+import e from 'cors';
 
 export default function CreateRecipe() {
     const [inputsEnabled, setInputsEnabled] = useState(false);
+    const [recipeName, setRecipeName] = useState("");
+    const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        setInputsEnabled(recipeName.trim().length > 0);
+    }, [recipeName])
+
+    const handleSetRecipe = (recipeValue) => {
+        if (loading) return;
+        setRecipeName(recipeValue);
+    }
+    
     const handleClick = () => {
         console.log("click");
     }
@@ -20,7 +32,8 @@ export default function CreateRecipe() {
                 <div className='cr-grid-container'>
                     <input 
                         className='cr-input2'
-                        placeholder='Enter a name for your new recipe'                    
+                        placeholder='Enter a name for your new recipe'
+                        onChange={(e) => handleSetRecipe(e.target.value)}                    
                     />
                     <div className='cr-directions-left-container'>
                         <h2 className='cr-h2-ingredients'>Ingredients</h2>

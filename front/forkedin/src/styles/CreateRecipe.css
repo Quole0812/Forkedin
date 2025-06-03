@@ -18,6 +18,7 @@
     grid-column: 10 / 11;
     grid-row: 2 / 2;
     height: 100%;
+    padding: 0.5rem 0;
 }
 
 .cr-directions-left-container {
@@ -26,6 +27,7 @@
     grid-column: 1 / 7;
     grid-row: 2 / 2;
     height: 100%;
+    padding: 0.5rem 0;
 }
 
 .cr-ingredient-row {
@@ -36,6 +38,7 @@
     margin-bottom: 1rem;
     align-items: center;
     justify-content: center;
+    padding: 0.5rem 0;
 }
 
 
@@ -50,7 +53,7 @@
 .cr-input2 {
     /* grid-area: name-input; */
     
-    grid-column: 6 / -6;
+    grid-column: 6 / -4;
     grid-row: 1 / 2;
     margin-top: 100px;
     height: 3rem;
@@ -60,12 +63,14 @@
     text-align: center;
     font-size: large;
     min-width: 320px;
+    
 }
 
 .cr-input2:focus {
     outline: none;
-    border: 3px solid #EB7A18;
+    border: 2px solid #EB7A18;
     border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.2s ease;
 }
 
 .cr-input3 {
@@ -81,8 +86,9 @@
 
 .cr-input3:focus {
     outline: none;
-    border: 3px solid #EB7A18;
+    border: 2px solid #EB7A18;
     border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.2s ease;
 }
 
 .cr-input-ingredient {
@@ -101,8 +107,9 @@
 
 .cr-input-ingredient:focus {
     outline: none;
-    border: 3px solid #EB7A18;
+    border: 2px solid #EB7A18;
     border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.2s ease;
 }
 
 .cr-input-qty {
@@ -119,8 +126,9 @@
 
 .cr-input-qty:focus {
     outline: none;
-    border: 3px solid #EB7A18;
+    border: 2px solid #EB7A18;
     border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.2s ease;
 }
 
 .cr-input-units {
@@ -136,8 +144,9 @@
 
 .cr-input-units:focus {
     outline: none;
-    border: 3px solid #EB7A18;
+    border: 2px solid #EB7A18;
     border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.2s ease;
 }
 
 .cr-input-note {
@@ -154,8 +163,9 @@
 
 .cr-input-note:focus {
     outline: none;
-    border: 3px solid #EB7A18;
+    border: 2px solid #EB7A18;
     border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.2s ease;
 }
 
 /* ///////////////////////////////////////////////////////////////BUTTONS/////////////////////////////////////// */
@@ -205,7 +215,7 @@
 }
 
 .cr-image-button:active {
-    box-shadow: 3px 0px 3px 0px rgba(29, 29, 29, 0.101);
+    box-shadow: 2px 0px 3px 0px rgba(29, 29, 29, 0.101);
     
 }
 
