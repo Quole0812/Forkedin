@@ -14,7 +14,7 @@ export default function RecipeDisplay() {
       console.log("my fellow brother, let's search for this shi");
       try {
         console.log(searchTerm)
-        const res = await axios.get(`http://localhost:5001/recipedisplay/official?query=${searchTerm}`)
+        const res = await axios.get(`http://localhost:5001/recipedisplay/recipes/official?query=${searchTerm}`)
         setRecipes(res.data);
         console.log(res);
         console.log(res.data);
@@ -25,7 +25,7 @@ export default function RecipeDisplay() {
     }
 
 
-
+    
 
 
 

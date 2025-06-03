@@ -4,6 +4,12 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import cors from "cors";
 import recipeDisplay from "./routes/RecipeDisplay.js";
+// import admin from "firebase-admin"
+
+
+// if (!admin.apps.length) {
+//   admin.initializeApp();
+// }
 
 dotenv.config(); // Load the .env file
 // const openai = new OpenAI({
