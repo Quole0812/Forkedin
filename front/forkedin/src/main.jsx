@@ -3,9 +3,11 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Header from './components/Header.jsx';
+import CreateRecipe from './components/CreateRecipe.jsx';
 
 const router = createBrowserRouter([
-  {path: '/', element: <Header />}
+  {path: '/', element: <Header />},
+  {path: '/create', element: <CreateRecipe />},
 ])
 
 
