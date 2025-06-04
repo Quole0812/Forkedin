@@ -7,6 +7,7 @@ import Ingredient from './Ingredient.jsx';
 
 import Header from '../Header.jsx';
 import '../../styles/CreateRecipe.css'
+import { ConstructionOutlined } from '@mui/icons-material';
 
 export default function CreateRecipe() {
     const [inputsEnabled, setInputsEnabled] = useState(false);
@@ -14,6 +15,8 @@ export default function CreateRecipe() {
     const [loading, setLoading] = useState(false);
     const [ingredients, setIngredients] = useState([]);
     const [highlightFields, setHighlightFields] = useState(false);
+    const [image, setImage] = useState("");
+    const [directions, setDirections] = useState("");
 
     useEffect(() => {
         const isValid = recipeName.trim().length > 0;
@@ -37,6 +40,7 @@ export default function CreateRecipe() {
         }
 
         setIngredients([...ingredients, {name: "", qty: "", unit: "", note: ""}]);
+        console.log(ingredients);
     }
 
     const handleIngredientChange = (index, field, value) => {
@@ -52,8 +56,13 @@ export default function CreateRecipe() {
     }
     
     const handleCreateRecipe = () => {
-        
-        console.log("recipe created");
+        const updated = [...ingredients];
+
+        // trim empty object at end of array
+        updated.splice(updated.length - 1, 1);
+        console.log(`${recipeName} recipe created.`);
+        console.log("Ingredients:", updated);
+        console.log("Directions:", directions);
         
     }
 
@@ -111,7 +120,11 @@ export default function CreateRecipe() {
                         <h2 className='cr-h2-directions'>Directions</h2>
                         
                         <button className='cr-image-button'>Add Image</button>
-                        <textarea className='cr-input3'></textarea>                 
+                        <textarea 
+                            className='cr-input3'
+                            placeholder='Enter your directions here...'
+                            onChange={(e) => setDirections(e.target.value)}
+                        />                 
                         <button
                             className='cr-create-button'
                             onClick={handleCreateRecipe}
