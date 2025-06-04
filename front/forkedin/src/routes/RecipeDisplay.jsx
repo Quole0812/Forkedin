@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import "../styles/RecipeDisplay.css"
 import axios from "axios";
-
-
 
 export default function RecipeDisplay() {
     const [searchTerm, setSearchTerm] = useState("");
     const [recipes, setRecipes] = useState([]);
     const [dbrecipes, setdbRecipes] = useState([]);
     const [filterRecipes, setFilterRecipes] = useState(false);
+    const navigate = useNavigate();
+
 
     const handleSearch = async () => {
       if (searchTerm.trim() === "") {
@@ -46,7 +47,11 @@ export default function RecipeDisplay() {
       } catch (error) {
         console.error("bruh food gone gang", error)
       }
+    }
 
+    const handleRecipeClick = (recipeUri) => {
+      // Navigate to the detailed recipe page using the recipe URI as the ID
+      navigate(`/recipedisplay/${encodeURIComponent(recipeUri)}`);
     }
 
     useEffect(() => {
@@ -62,6 +67,7 @@ export default function RecipeDisplay() {
   
       fetchRecipes();
     }, []);
+
 
     useEffect(() => {
       async function fetchRecipes2() {
@@ -119,7 +125,12 @@ export default function RecipeDisplay() {
           recipe = item;
         }
     return (
-      <div className="card" key={i}>
+      <div 
+        className="card" 
+        key={i}
+        onClick={() => handleRecipeClick(recipe.uri)}
+        style={{ cursor: 'pointer' }}
+      >
         <div className="image-placeholder">
           <img
   src={
