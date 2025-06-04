@@ -1,8 +1,10 @@
 .header-container {
   display: flex;
   align-items: center;
-  gap: 20px;
+  /* gap: 20px; */
   padding: 10px;
+  margin-left: 200px;
+  margin-right: 200px;
 }
 
 .search-bar {
@@ -23,12 +25,14 @@
 }
 
 .button-green {
+  /* position: relative; */
   width: 60px;
   height: 40px;
   background-color: #1c3c09;
   border: none;
   border-radius: 15px;
   cursor: pointer;
+  /* transform: scaleX(20px); */
 }
 
 .grid-container {
@@ -49,6 +53,8 @@
   /* padding: 10px; */
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  position: relative;
   gap: 8px;
   text-align: center;
   /* max-height: 380px;
@@ -64,9 +70,9 @@
 }
 
 .card:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 3.5px 7.0px 7.0px hsl(0deg 0% 0% / 0.39);
-
+  /* transform: translate(-1px, -1px); */
+  /* box-shadow: 3.5px 7.0px 7.0px hsl(0deg 0% 0% / 0.39); */
+  box-shadow: 0 4px 8px 5px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .image-placeholder {
@@ -83,9 +89,11 @@
 }
 
 .card-info {
+  /* position:absolute; */
+  /* bottom:0; */
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 13px;
   text-align: left;
   /* border-top: 1px solid #000; */
   padding-top: 4px;
@@ -94,7 +102,8 @@
 }
 
 .divider {
-  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  height:10%;
   width: 60%;         
   margin: 0 auto;     
 }
@@ -103,3 +112,63 @@
   width:0%;
   border-left: 1px solid #ccc;
 }
+
+.highlight-number {
+  color: #606c38;
+  font-weight: bold; 
+}
+
+
+
+
+
+.switch-spot {
+  padding-left: 210px;
+  padding-right:210px;
+  display: flex;
+  flex-direction: row;
+  vertical-align:middle;
+  font-size: 20px;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  padding: 6px;
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #4caf50;
+  border-color: #4caf50;
+}
+
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+
+
+.spacing {
+  width: 5px;
+}
+
+
+
+
