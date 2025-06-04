@@ -61,12 +61,12 @@
   /* align-self: center; */
   box-shadow: 0 4px 8px 0.5px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   font-family: 'Courier New', Courier, monospace;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 3.5px 7.0px 7.0px hsl(0deg 0% 0% / 0.39);
-
+  transform: translate(-2px, -4px);
+  box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .image-placeholder {

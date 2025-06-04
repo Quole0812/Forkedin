@@ -34,6 +34,59 @@ router.get("/default", async (req, res) => {
   }
 });
 
+// get official recipes
+router.get("/official", async (req, res) => {
+  const { query } = req.query;
+  try {
+    const edamamRes = await axios.get("https://api.edamam.com/api/recipes/v2", {
+      params: {
+        type: "public",
+        q: query,
+        app_id: process.env.EDAMAM_APP_ID,
+        app_key: process.env.EDAMAM_APP_KEY,
+        to: 20
+      }, 
+      headers: {
+        "Edamam-Account-User": "bananavstaco",
+      }
+    });
+    res.json(edamamRes.data.hits);
+  } catch (err) {
+    console.error("Failed to fetch Edamam recipes:", err?.response?.data || err.message);
+    res.status(500).json({ error: "Failed to fetch recipes" });
+  }
+});
+
+// get specific recipe by URI
+router.get("/recipe/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Decode the URI since it was URL encoded
+    const decodedUri = decodeURIComponent(id);
+    
+    const edamamRes = await axios.get("https://api.edamam.com/api/recipes/v2/by-uri", {
+      params: {
+        type: "public",
+        uri: decodedUri,
+        app_id: process.env.EDAMAM_APP_ID,
+        app_key: process.env.EDAMAM_APP_KEY
+      }, 
+      headers: {
+        "Edamam-Account-User": "bananavstaco",
+      }
+    });
+    
+    if (edamamRes.data.hits && edamamRes.data.hits.length > 0) {
+      res.json(edamamRes.data.hits[0]);
+    } else {
+      res.status(404).json({ error: "Recipe not found" });
+    }
+  } catch (err) {
+    console.error("Failed to fetch specific recipe:", err?.response?.data || err.message);
+    res.status(500).json({ error: "Failed to fetch recipe details" });
+  }
+});
+
 
 
 
