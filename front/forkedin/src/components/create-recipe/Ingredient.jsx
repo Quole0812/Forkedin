@@ -1,4 +1,3 @@
-import e from 'cors';
 import { useEffect, useState } from 'react';
 
 export default function Ingredient({ index, inputsEnabled, data, 
