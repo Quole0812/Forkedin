@@ -6,6 +6,10 @@
   line-height: 1.6;
 }
 
+/* .section {
+  height:fit-content;
+} */
+
 .back-button {
   background-color: #1c3c09;
   color: white;
@@ -67,6 +71,7 @@
   border-radius: 8px;
   border-left: 4px solid #ff9800;
   margin-top: 10px;
+  height:fit-content;
 }
 
 .cautions-section-header h3 {
@@ -330,11 +335,13 @@
   font-weight: normal;
 }
 
+
+
 .recipe-sidebar {
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 10px;
-  height: fit-content;
+  height: 40%;
 }
 
 .nutrition-section h2 {

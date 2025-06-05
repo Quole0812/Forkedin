@@ -179,7 +179,7 @@ section {
 }
 
 .carousel::-webkit-scrollbar {
-  display: none;
+  /* display: none; */
 }
 
 .carousel-item {

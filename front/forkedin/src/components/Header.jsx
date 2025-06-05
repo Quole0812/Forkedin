@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "./AuthContext"
 import logo from "../assets/logo.png"
 import "./Header.css"
@@ -7,6 +7,11 @@ import React from 'react';
 export default function Header() {
     const navigate = useNavigate();
     const { currentUser, logout } = useAuth();
+    const location = useLocation();
+
+    const isActive = (path) => {
+      return location.pathname === path;
+    };
 
     const handleLogout = async () => {
         try {
@@ -27,10 +32,10 @@ export default function Header() {
             </div>
             
             <nav className="nav-links">
-                <Link to="/" className="nav-link">Home</Link>
-                <Link to="/recipedisplay" className="nav-link">Recipes</Link>
-                <Link to="/saved" className="nav-link">Saved</Link>
-            </nav>
+                <Link to="/" className={isActive('/') ? 'nav-link active' : 'nav-link'}>Home</Link>
+                <Link to="/recipedisplay" className={isActive('/recipedisplay') ? 'nav-link active' : 'nav-link'}>Recipes</Link>
+                <Link to="/create" className={isActive('/create') ? 'nav-link active' : 'nav-link'}>Create</Link>
+                        </nav>
             
             <div className="header-actions">
                 {currentUser ? (
