@@ -1,0 +1,47 @@
+.chat-open-button {
+  position: fixed;
+  right: 2.5rem;
+  bottom: 2.5rem;
+  background-color: #EB7A18;
+  width: 4rem;
+  height: 4rem;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.chat-window {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  height: 400px;
+  background: white;
+  border: 1px solid #1E3807;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+}
+
+.chat-close-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: white;
+  border: 2px solid #EB7A18;
+  color: #EB7A18;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3 ease;
+}
+

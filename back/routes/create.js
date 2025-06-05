@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import AWS from "aws-sdk";
-import db from "../firebase.js";
+import { db } from "../firebase.js";
 import dotenv from "dotenv";
 
 dotenv.config();
