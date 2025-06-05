@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
+import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './components/AuthContext.jsx';
 import Header from './components/Header.jsx';
@@ -8,6 +9,10 @@ import RecipeDisplay from './routes/RecipeDisplay.jsx';
 import Login from './routes/login.jsx';
 import SignUp from './routes/signUp.jsx';
 import Home from './routes/Home.jsx';
+import AccountPage from './routes/AccountPage.jsx';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const router = createBrowserRouter([
   {
@@ -20,7 +25,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'login',
-        element: <Login />
+        element: <AccountPage />
       },
       {
         path: 'signup',
@@ -34,6 +39,10 @@ const router = createBrowserRouter([
         path: 'saved',
         element: <div>Saved Page</div>
       },
+      {
+        path: 'account/*',
+        element: <AccountPage />
+      },
 //       {path: '/', element: <Header />},
       {path: '/recipedisplay', element: <RecipeDisplay />},
     ]
@@ -44,6 +53,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <RouterProvider router={router}/>
+      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar />
     </AuthProvider>
   </StrictMode>,
 )

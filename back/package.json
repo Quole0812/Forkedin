@@ -19,6 +19,5 @@
     "firebase-admin": "^13.4.0",
     "nodemon": "^3.1.10",
     "openai": "^5.0.1"
-  },
-  "type": "module"
+  }
 }

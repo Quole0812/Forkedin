@@ -4,8 +4,9 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import cors from "cors";
 import recipeDisplay from "./routes/RecipeDisplay.js";
-// import admin from "firebase-admin"
+import userRoutes from "./routes/UserRoute.js";
 
+// import admin from "firebase-admin"
 
 // if (!admin.apps.length) {
 //   admin.initializeApp();
@@ -19,15 +20,18 @@ dotenv.config(); // Load the .env file
 const app = express();
 const port = 5001;
 
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
+
 // use middleware to parse json request bodies
 app.use(bodyParser.json());
-app.use(cors());
 
-
+// Mount all /users routes
+app.use("/users", userRoutes);
 
 app.use("/recipedisplay", recipeDisplay);
-
-
 
 app.listen(port, () => {
    console.log(`Server is running on http://localhost:${port}`);

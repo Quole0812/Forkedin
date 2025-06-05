@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "./AuthContext"
 import logo from "../assets/logo.png"
 import "./Header.css"
+import React from 'react';
 
 export default function Header() {
     const navigate = useNavigate();
