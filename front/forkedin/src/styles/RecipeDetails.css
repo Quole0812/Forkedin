@@ -384,15 +384,6 @@
   text-align: center;
 }
 
-/* Comments Section - Outside the grid */
-.recipe-details-container .comments-section {
-  margin-top: 40px;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  font-family: 'Courier New', Courier, monospace;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .recipe-header {
@@ -429,8 +420,4 @@
     min-width: auto;
   }
 
-  .comments-section {
-    margin-top: 30px;
-    padding: 15px;
-  }
 } 

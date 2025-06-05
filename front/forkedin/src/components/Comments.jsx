@@ -138,89 +138,9 @@ const Comments = ({ recipeUri }) => {
       <h2>Comments ({comments.length})</h2>
       
       {loading ? (
-        <div className="loading">Loading comments...</div>
+        <div className="loading-comments">Loading comments...</div>
       ) : (
         <>
-          {/* Comments List */}
-          <div className="comments-list">
-            {comments.map((comment) => (
-              <div key={comment.id} className="comment">
-                <div className="comment-header">
-                  <span className="comment-author">@{comment.authorUsername}</span>
-                  <span className="comment-date">{formatDate(comment.createdAt)}</span>
-                  {user && user.uid === comment.authorId && (
-                    <button 
-                      onClick={() => handleDeleteComment(comment.id)}
-                      className="delete-btn"
-                      aria-label="Delete comment"
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-                <p className="comment-text">{comment.text}</p>
-                
-                {/* Reply Toggle */}
-                <div className="comment-actions">
-                  <button 
-                    onClick={() => toggleReplies(comment.id)}
-                    className="reply-toggle"
-                  >
-                    {showReplies[comment.id] ? 'Hide' : 'Reply'} 
-                    {comment.replies && comment.replies.length > 0 && 
-                      ` (${comment.replies.length})`
-                    }
-                  </button>
-                </div>
-                
-                {/* Replies */}
-                {showReplies[comment.id] && comment.replies && comment.replies.length > 0 && (
-                  <div className="replies">
-                    {comment.replies.map((reply) => (
-                      <div key={reply.id} className="reply">
-                        <div className="reply-header">
-                          <span className="reply-author">@{reply.authorUsername}</span>
-                          <span className="reply-date">{formatDate(reply.createdAt)}</span>
-                          {user && user.uid === reply.authorId && (
-                            <button 
-                              onClick={() => handleDeleteReply(comment.id, reply.id)}
-                              className="delete-btn"
-                              aria-label="Delete reply"
-                            >
-                              ×
-                            </button>
-                          )}
-                        </div>
-                        <p className="reply-text">{reply.text}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                
-                {/* Reply Form */}
-                {showReplies[comment.id] && user && (
-                  <div className="reply-form">
-                    <textarea
-                      value={replyTexts[comment.id] || ''}
-                      onChange={(e) => setReplyTexts(prev => ({
-                        ...prev, 
-                        [comment.id]: e.target.value
-                      }))}
-                      placeholder="Write a reply..."
-                      rows="2"
-                    />
-                    <button 
-                      onClick={() => handleSubmitReply(comment.id)}
-                      disabled={!replyTexts[comment.id]?.trim()}
-                    >
-                      Reply
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          
           {/* Add Comment Form */}
           {user ? (
             <form onSubmit={handleSubmitComment} className="comment-form">
@@ -231,11 +151,12 @@ const Comments = ({ recipeUri }) => {
                   placeholder="Share your thoughts about this recipe..."
                   rows="3"
                   disabled={submitting}
+                  className="comment-input"
                 />
                 <button 
                   type="submit" 
                   disabled={!newComment.trim() || submitting}
-                  className="submit-comment-btn"
+                  className="comment-submit-btn"
                 >
                   {submitting ? 'Posting...' : 'Post Comment'}
                 </button>
@@ -244,6 +165,108 @@ const Comments = ({ recipeUri }) => {
           ) : (
             <div className="login-prompt">
               <p>Please log in to leave a comment</p>
+            </div>
+          )}
+
+          {/* Comments List */}
+          {comments.length === 0 ? (
+            <div className="no-comments">
+              <p>No comments yet. Be the first to share your thoughts!</p>
+            </div>
+          ) : (
+            <div className="comments-list">
+              {comments.map((comment) => (
+                <div key={comment.id} className="comment-item">
+                  <div className="comment-header">
+                    <div className="comment-author">
+                      <span className="author-name">{comment.authorName}</span>
+                      <span className="author-username">@{comment.authorUsername}</span>
+                    </div>
+                    <div className="comment-meta">
+                      <span className="comment-date">{formatDate(comment.createdAt)}</span>
+                      {user && user.uid === comment.authorId && (
+                        <button 
+                          onClick={() => handleDeleteComment(comment.id)}
+                          className="delete-btn"
+                          aria-label="Delete comment"
+                        >
+                          ×
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="comment-content">
+                    <p>{comment.text}</p>
+                  </div>
+                  
+                  {/* Comment Actions */}
+                  <div className="comment-actions">
+                    <button 
+                      onClick={() => toggleReplies(comment.id)}
+                      className="replies-toggle"
+                    >
+                      {showReplies[comment.id] ? 'Hide replies' : 'Reply'} 
+                      {comment.replies && comment.replies.length > 0 && 
+                        ` (${comment.replies.length})`
+                      }
+                    </button>
+                  </div>
+                  
+                  {/* Replies */}
+                  {showReplies[comment.id] && comment.replies && comment.replies.length > 0 && (
+                    <div className="replies-list">
+                      {comment.replies.map((reply) => (
+                        <div key={reply.id} className="reply-item">
+                          <div className="reply-header">
+                            <div className="reply-author">
+                              <span className="author-name">{reply.authorName}</span>
+                              <span className="author-username">@{reply.authorUsername}</span>
+                            </div>
+                            <div className="reply-meta">
+                              <span className="reply-date">{formatDate(reply.createdAt)}</span>
+                              {user && user.uid === reply.authorId && (
+                                <button 
+                                  onClick={() => handleDeleteReply(comment.id, reply.id)}
+                                  className="delete-btn"
+                                  aria-label="Delete reply"
+                                >
+                                  ×
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                          <div className="reply-content">
+                            <p>{reply.text}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Reply Form */}
+                  {showReplies[comment.id] && user && (
+                    <div className="reply-form">
+                      <textarea
+                        value={replyTexts[comment.id] || ''}
+                        onChange={(e) => setReplyTexts(prev => ({
+                          ...prev, 
+                          [comment.id]: e.target.value
+                        }))}
+                        placeholder="Write a reply..."
+                        rows="2"
+                        className="reply-input"
+                      />
+                      <button 
+                        onClick={() => handleSubmitReply(comment.id)}
+                        disabled={!replyTexts[comment.id]?.trim()}
+                        className="reply-submit-btn"
+                      >
+                        Reply
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </>
