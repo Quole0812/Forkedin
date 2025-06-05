@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/RecipeDisplay.css"
 import axios from "axios";
+import { useAuth } from "../components/AuthContext"
 
 export default function RecipeDisplay() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -9,6 +10,9 @@ export default function RecipeDisplay() {
     const [dbrecipes, setdbRecipes] = useState([]);
     const [filterRecipes, setFilterRecipes] = useState(false);
     const navigate = useNavigate();
+    const { currentUser, logout } = useAuth();
+
+    console.log(currentUser);
 
 
     const handleSearch = async () => {
@@ -154,6 +158,7 @@ export default function RecipeDisplay() {
             <div><span className="highlight-number">{recipe.ingredients?.length || 0}</span> ingredients</div>
           </div>
         </div>
+        <div><button className="button-13">Bookmark</button></div>
       </div>
     );
   })}

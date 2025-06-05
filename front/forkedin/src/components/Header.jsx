@@ -21,13 +21,13 @@ export default function Header() {
             <div className="header-left">
                 <Link to="/" className="logo-container">
                     <img src={logo} alt="ForkedIn Logo" className="logo-image" />
-                    <span className="logo-text">ForkedIn</span>
+                    {/* <span className="logo-text">ForkedIn</span> */}
                 </Link>
             </div>
             
             <nav className="nav-links">
                 <Link to="/" className="nav-link">Home</Link>
-                <Link to="/recipes" className="nav-link">Recipes</Link>
+                <Link to="/recipedisplay" className="nav-link">Recipes</Link>
                 <Link to="/saved" className="nav-link">Saved</Link>
             </nav>
             
