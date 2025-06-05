@@ -1,7 +1,9 @@
 {
+  "type": "module",
   "name": "back",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "npx nodemon app.js"
   },
@@ -10,14 +12,19 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@mui/base": "^5.0.0-beta.70",
+    "@mui/system": "^7.1.1",
     "axios": "^1.9.0",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "firebase-admin": "^13.4.0",
+    "multer": "^2.0.1",
     "nodemon": "^3.1.10",
     "openai": "^5.0.1"
   },
-  "type": "module"
+  "devDependencies": {
+    "aws-sdk": "^2.1692.0"
+  }
 }

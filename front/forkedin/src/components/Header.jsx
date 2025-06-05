@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "./AuthContext"
 import logo from "../assets/logo.png"
 import "./Header.css"
+import React from 'react';
 
 export default function Header() {
     const navigate = useNavigate();
@@ -34,9 +35,9 @@ export default function Header() {
             <div className="header-actions">
                 {currentUser ? (
                     <div className="user-section">
-                        <span className="user-welcome">
+                        <Link to="/account/user" className="user-welcome">
                             Welcome, <strong>{currentUser.displayName || currentUser.email}</strong>!
-                        </span>
+                        </Link>
                         <button className="logout-button" onClick={handleLogout}>
                             Log Out
                         </button>

@@ -1,0 +1,351 @@
+/* === GLOBAL === */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  scroll-behavior: smooth;
+  font-family: sans-serif;
+}
+
+/* === ARROW BOUNCE === */
+
+.scroll-down-indicator {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  color: white;
+  animation: bounce 2s infinite;
+  z-index: 10;
+  cursor: pointer;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(10px);
+  }
+}
+
+/* === SCROLL SNAP CONTAINER === */
+.scroll-wrapper {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+section {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.scroll-wrapper::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, Opera */
+}
+
+/* === HOME SECTION === */
+.home-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: url('../assets/main_back.jpg') center/cover no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.home-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(49, 49, 49, 0.8);
+  z-index: 1;
+}
+
+.home-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding-left: 5%;
+  max-width: 90%;
+}
+
+.home-header {
+  text-align: left;
+}
+
+.home-header h1 {
+  font-size: 3.2rem;
+  max-width: 450px;
+  color: white;
+}
+
+.home-header p {
+  font-size: 1.5rem;
+  color: #c8c8c8;
+  max-width: 550px;
+  margin: 1rem auto;
+}
+
+.get-started {
+  margin: 2rem 0;
+}
+
+.get-started button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  background-color: #D89754;
+  color: white;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.get-started button:hover {
+  background-color: #ae7944;
+}
+
+/* === PAGE SECTIONS === */
+.page-section {
+  display: flex;
+  justify-content: flex-start; /* Align to the top */
+  align-items: center;
+  flex-direction: column;
+  background-color: #fff;
+  color: #000;
+  padding-top: 2rem; /* Add vertical spacing manually */
+}
+
+.page-section h2 {
+  font-size: 3rem;
+}
+
+.alt-bg {
+  background-color: #fff;
+}
+
+/* === DISCOVER SECTION === */
+
+.discover-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0rem
+}
+
+.discover-container h2 {
+  margin-bottom: 0.25rem;
+}
+
+.discover-subtitle {
+  font-size: 1.1rem;
+  color: #444;
+  margin: 0.25rem 0 2rem;
+  max-width: 600px;
+}
+
+/* === CAROUSEL === */
+
+.carousel-wrapper {
+  width: 750px;
+  max-width: 750px;
+  overflow-y: visible;
+  margin-bottom: 0.5rem;
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-item {
+  flex: 0 0 500px;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 550px;
+  color: #333;
+  margin: 0 0.5rem;
+  overflow: visible;
+  padding: 1rem;
+}
+
+.carousel-item img,
+.carousel-image {
+  width: 550px;
+  height: 550px;
+  object-fit: cover;
+  border-radius: 5%;
+}
+
+.carousel-item div,
+.carousel-info {
+  text-align: left;
+  flex-grow: 1;
+}
+
+.carousel-item p,
+.carousel-meta {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.carousel-item strong,
+.carousel-title {
+  font-size: 1.25rem;
+  color: #264c11;
+}
+
+.carousel-image-wrapper {
+  height: 400px; /* or any height you want */
+  width: 550px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.5); /* Drop shadow */
+  border-radius: 2.5%;
+}
+
+
+/* === DOTS === */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.carousel-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #bbb;
+  opacity: 0.6;
+  transform-origin: center;
+  transition: transform 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.carousel-dots .dot.active {
+  transform: scale(1.25);
+  background-color: #575757;
+  opacity: 1;
+}
+
+/* === EXPLORE BUTTON === */
+.explore-button {
+  background-color: #34620c;
+  color: white;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.5); 
+}
+
+.explore-button:hover {
+  background-color: #1E3807;
+}
+
+/* === SECTION 3: CREATE === */
+
+.create-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.create-image {
+  max-width: 550px;
+  width: 100%;
+  height: 750px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  margin-top: 2rem;
+}
+
+.create-text {
+  max-width: 500px;
+}
+
+.create-text h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.create-text p {
+  font-size: 1.1rem;
+  color: #444;
+  margin: 0.25rem 0 2rem;
+  max-width: 600px;
+}
+
+/* === SECTION 4: CONNECT === */
+
+.connect-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.connect-image {
+  max-width: 550px;
+  width: 100%;
+  height: 750px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  margin-top: 2rem;
+}
+
+.connect-text {
+  max-width: 500px;
+}
+
+.connect-text h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.connect-text p {
+  font-size: 1.1rem;
+  color: #444;
+  margin: 0.25rem 0 2rem;
+  max-width: 600px;
+}

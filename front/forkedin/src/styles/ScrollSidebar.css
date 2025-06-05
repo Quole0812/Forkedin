@@ -1,0 +1,63 @@
+.scroll-sidebar {
+  position: fixed;
+  top: 50%;
+  left: 2%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  z-index: 100;
+  mix-blend-mode: difference;
+}
+
+.nav-dot {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: flex-start;
+  transition: color 0.3s;
+}
+
+.nav-dot:hover .dot {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6);
+}
+
+.label {
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: currentColor;
+  transition: opacity 0.3s;
+}
+
+/* Dot + Line positioning */
+.dot-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Filled circle */
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid white;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.line {
+  width: 2px;
+  height: 30px;
+  background-color: white;
+  z-index: 1;
+}
+
+@media (max-width: 1250px) {
+  .scroll-sidebar {
+    display: none;
+  }
+}
