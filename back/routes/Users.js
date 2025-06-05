@@ -209,15 +209,13 @@ router.get("/:userId", async (req, res) => {
     }
 
     const userData = userDoc.data();
-    // Return only public information
-    const publicData = {
+    
+    // Return full user data for internal/private use
+    res.json({
       id: userId,
-      fullName: userData.fullName,
-      username: userData.username,
-      createdAt: userData.createdAt
-    };
+      ...userData
+    });
 
-    res.json({ user: publicData });
   } catch (error) {
     console.error('Error getting user:', error);
     res.status(500).json({ error: 'Failed to get user' });

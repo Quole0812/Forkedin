@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/RecipeDisplay.css"
 import axios from "axios";
+import React from "react";
 
 export default function RecipeDisplay() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -111,7 +112,7 @@ export default function RecipeDisplay() {
         <div className="switch-spot">
           <input type="checkbox" id="user-created" name="user-created" onClick={() => setFilterRecipes(prev => !prev)}/>
           <div className="spacing"></div>
-          <label for="user-created">filter by Users Created</label>
+          <label htmlFor="user-created">filter by Users Created</label>
         </div>
 
 

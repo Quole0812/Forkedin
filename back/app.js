@@ -28,9 +28,6 @@ app.use(cors({
 // use middleware to parse json request bodies
 app.use(bodyParser.json());
 
-// Mount all /users routes
-app.use("/users", userRoutes);
-
 app.use("/recipedisplay", recipeDisplay);
 app.use("/users", Users);
 app.use("/comments", Comments);
