@@ -4,12 +4,20 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import cors from "cors";
 import createRouter from "./routes/create.js";
+import recipeDisplay from "./routes/RecipeDisplay.js";
+import Users from "./routes/Users.js";
+import Comments from "./routes/Comments.js";
+// import admin from "firebase-admin"
+
+
+// if (!admin.apps.length) {
+//   admin.initializeApp();
+// }
 
 dotenv.config(); // Load the .env file
-console.log("ENV CHECK → AWS_ACCESS_KEY_ID:", process.env.AWS_ACCESS_KEY_ID);
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// const openai = new OpenAI({
+//     apiKey: process.env.OPENAI_API_KEY,
+// });
 
 const app = express();
 const port = 5001;
@@ -23,6 +31,13 @@ app.use(cors());
 app.use("/create", createRouter);
 
 
+
+app.use("/recipedisplay", recipeDisplay);
+app.use("/users", Users);
+app.use("/comments", Comments);
+
+
+
 app.listen(port, () => {
    console.log(`Server is running on http://localhost:${port}`);
 });
@@ -31,16 +46,16 @@ app.listen(port, () => {
 
 
 //get for completion if u wanna use
-app.post('/chat', async (req, res) => {
-    const { messages } = req.body;
-    try {
-        const completion = await openai.chat.completions.create({
-            messages: messages, 
-            model: "gpt-3.5-turbo"
-        });
-        const answer = completion.choices[0].message.content;
-        res.json(answer);
-    } catch (error) {
-        console.error("bruh we can't get the chat", error);
-    }
-})
+// app.post('/chat', async (req, res) => {
+//     const { messages } = req.body;
+//     try {
+//         const completion = await openai.chat.completions.create({
+//             messages: messages, 
+//             model: "gpt-3.5-turbo"
+//         });
+//         const answer = completion.choices[0].message.content;
+//         res.json(answer);
+//     } catch (error) {
+//         console.error("bruh we can't get the chat", error);
+//     }
+// })

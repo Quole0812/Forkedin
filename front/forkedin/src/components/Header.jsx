@@ -1,37 +1,57 @@
 import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "./AuthContext"
+import logo from "../assets/logo.png"
 import "./Header.css"
-
 
 export default function Header() {
     const navigate = useNavigate();
+    const { currentUser, logout } = useAuth();
 
-    const handleLogout = () => {
-    //do ur log out later
-    console.log("Log out cuh");
-    navigate('/login'); 
-  };
-
+    const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/'); 
+        } catch (error) {
+            console.error("Failed to log out:", error);
+        }
+    };
 
     return (
-        <>
         <header className="header">
-      <div className="logo">
-        <p>Lmfao we need our logo</p>
-      </div>
-    <div className="dalink">
-      <nav className="nav-links">
-        <Link to="/">Home</Link>
-        <Link to="/recipes">Recipes</Link>
-        <Link to="/saved">Saved</Link>
-      </nav>
-      <div className="header-actions">
-        <button className="logout-button" onClick={handleLogout}>
-          Log Out
-        </button>
-      </div>
-      </div>
-    </header>
-        </>
+            <div className="header-left">
+                <Link to="/" className="logo-container">
+                    <img src={logo} alt="ForkedIn Logo" className="logo-image" />
+                    {/* <span className="logo-text">ForkedIn</span> */}
+                </Link>
+            </div>
+            
+            <nav className="nav-links">
+                <Link to="/" className="nav-link">Home</Link>
+                <Link to="/recipedisplay" className="nav-link">Recipes</Link>
+                <Link to="/saved" className="nav-link">Saved</Link>
+            </nav>
+            
+            <div className="header-actions">
+                {currentUser ? (
+                    <div className="user-section">
+                        <span className="user-welcome">
+                            Welcome, <strong>{currentUser.displayName || currentUser.email}</strong>!
+                        </span>
+                        <button className="logout-button" onClick={handleLogout}>
+                            Log Out
+                        </button>
+                    </div>
+                ) : (
+                    <div className="auth-buttons">
+                        <Link to="/login" className="login-link">
+                            Log In
+                        </Link>
+                        <Link to="/signup" className="signup-link">
+                            Sign Up
+                        </Link>
+                    </div>
+                )}
+            </div>
+        </header>
     )
-
 }
