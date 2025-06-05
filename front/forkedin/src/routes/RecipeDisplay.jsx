@@ -77,7 +77,7 @@ export default function RecipeDisplay() {
           console.log("heres the db stuff")
           console.log(res.data);
         } catch (error) {
-          console.error("bruh where the db recipe at");
+          console.error("bruh where the db recipe at", error);
         }
       }
   
