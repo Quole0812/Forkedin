@@ -2,11 +2,12 @@ import express from "express";
 import axios from "axios";
 import dotenv from "dotenv"
 // import admin from "firebase-admin"
-import { db } from "../firebase.js";
+import { db, adminInstance } from "../firebase.js";
 
 dotenv.config();
 
 const router = express.Router();
+const FieldValue = adminInstance.firestore.FieldValue;
 
 router.get("/official", async (req, res) => {
   const { query } = req.query;
@@ -24,7 +25,7 @@ router.get("/official", async (req, res) => {
       }
     });
     console.log("lol trynna look for this")
-    console.log(edamamRes);
+    // console.log(edamamRes);
     res.json(edamamRes.data.hits);
   } catch (err) {
     console.error("Failed to fetch Edamam recipes:", err?.response?.data || err.message);
@@ -50,7 +51,7 @@ router.get("/default", async (req, res) => {
       }
     });
     console.log("lol trynna look for this")
-    console.log(edamamRes);
+    // console.log(edamamRes);
     res.json(edamamRes.data.hits);
   } catch (err) {
     console.error("Failed to fetch Edamam recipes:", err?.response?.data || err.message);
@@ -131,6 +132,102 @@ router.get("/user", async (req, res) => {
   }
 });
 
+router.get("/user/:id", async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const userRef = db.collection("users").doc(userId);
+    const userSnap = await userRef.get();
+
+
+    if (!userSnap.exists) {
+      return res
+        .status(404)
+        .json({ error: `User with ID "${userId}" not found.` });
+    }
+
+    const userData = { id: userSnap.id, ...userSnap.data() };
+    return res.json(userData);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return res
+      .status(500)
+      .json({ error: "Failed to fetch user from Firestore" });
+  }
+});
+
+
+router.put("/user/:id/:stringToAdd", async (req, res) => {
+  const { id, stringToAdd } = req.params;
+
+  if (!stringToAdd || stringToAdd.trim() === "") {
+    return res.status(400).json({ error: "String to add cannot be empty." });
+  }
+
+  try {
+    const userRef = db.collection("users").doc(id);
+    console.log("we trynna update dis now")
+
+    await userRef.update({
+      saved: FieldValue.arrayUnion(stringToAdd.trim()),
+    });
+
+    const updatedSnap = await userRef.get();
+    const updatedData = { id: updatedSnap.id, ...updatedSnap.data() };
+
+    return res.json({
+      message: `"${stringToAdd}" added to saved list.`,
+      user: updatedData,
+    });
+  } catch (error) {
+    console.error("Error adding to saved array:", error);
+
+    if (
+      error.code === 5 ||
+      error.message.includes("No document to update")
+    ) {
+      return res.status(404).json({ error: `User with ID "${id}" not found.` });
+    }
+
+    return res.status(500).json({ error: "Internal error adding to saved list." });
+  }
+});
+
+router.delete("/user/:id/:stringToRemove", async (req, res) => {
+  const { id, stringToRemove } = req.params;
+
+  if (!stringToRemove || stringToRemove.trim() === "") {
+    return res.status(400).json({ error: "String to remove cannot be empty." });
+  }
+
+  try {
+    const userRef = db.collection("users").doc(id);
+    console.log("we trynna remove dis now");
+
+    await userRef.update({
+      saved: FieldValue.arrayRemove(stringToRemove.trim()),
+    });
+
+    const updatedSnap = await userRef.get();
+    const updatedData = { id: updatedSnap.id, ...updatedSnap.data() };
+
+    return res.json({
+      message: `"${stringToRemove}" removed from saved list.`,
+      user: updatedData,
+    });
+  } catch (error) {
+    console.error("Error removing from saved array:", error);
+
+    if (
+      error.code === 5 ||
+      error.message.includes("No document to update")
+    ) {
+      return res.status(404).json({ error: `User with ID "${id}" not found.` });
+    }
+
+    return res.status(500).json({ error: "Internal error removing from saved list." });
+  }
+});
 
 
 export default router;
