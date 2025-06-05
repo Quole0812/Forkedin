@@ -8,6 +8,7 @@ import RecipeDisplay from './routes/RecipeDisplay.jsx';
 import RecipeDetails from './routes/RecipeDetails.jsx';
 import Login from './routes/login.jsx';
 import SignUp from './routes/signUp.jsx';
+import CreateRecipe from './components/create-recipe/CreateRecipe.jsx';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: 'recipes',
         element: <div>Recipes Page</div>
+      },
+      {
+        path: 'create',
+        element: <CreateRecipe />
       },
       {
         path: 'saved',

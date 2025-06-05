@@ -3,6 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import OpenAI from "openai";
 import cors from "cors";
+import createRouter from "./routes/create.js";
 import recipeDisplay from "./routes/RecipeDisplay.js";
 import Users from "./routes/Users.js";
 import Comments from "./routes/Comments.js";
@@ -24,6 +25,10 @@ const port = 5001;
 // use middleware to parse json request bodies
 app.use(bodyParser.json());
 app.use(cors());
+
+// const createRouter = require("./routes/create");
+
+app.use("/create", createRouter);
 
 
 
