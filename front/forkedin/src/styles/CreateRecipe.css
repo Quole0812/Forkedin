@@ -41,6 +41,20 @@
     padding: 0.5rem 0;
 }
 
+.cr-total-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;  
+    grid-column: 6 / -4;
+    grid-row: 2 / 3;
+    margin-top: 10%;
+    margin-bottom: 1rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0;
+}
+
 
 /*//////////////////////////////////////////////////////////////////INPUTS///////////////// */
 
@@ -295,6 +309,14 @@
     color: #000000e0;
     font-size: 28px;
     margin-bottom: 1rem;
+}
+
+.cr-h3-totals {
+    align-self: center;
+    /* justify-content: center; */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #000000e0;
+    font-size: 24px;
 }
 
 .header {

@@ -3,6 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import OpenAI from "openai";
 import cors from "cors";
+import createRouter from "./routes/create.js";
 
 dotenv.config(); // Load the .env file
 const openai = new OpenAI({
@@ -15,6 +16,10 @@ const port = 5001;
 // use middleware to parse json request bodies
 app.use(bodyParser.json());
 app.use(cors());
+
+// const createRouter = require("./routes/create");
+
+app.use("/create", createRouter);
 
 
 app.listen(port, () => {
