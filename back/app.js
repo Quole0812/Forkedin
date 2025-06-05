@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import cors from "cors";
 import recipeDisplay from "./routes/RecipeDisplay.js";
+import Users from "./routes/Users.js";
+import Comments from "./routes/Comments.js";
 // import admin from "firebase-admin"
 
 
@@ -26,6 +28,8 @@ app.use(cors());
 
 
 app.use("/recipedisplay", recipeDisplay);
+app.use("/users", Users);
+app.use("/comments", Comments);
 
 
 

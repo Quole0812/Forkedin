@@ -5,11 +5,12 @@ import '../styles/auth.css';
 
 const SignUp = () => {
   const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signup } = useAuth();
+  const { signup, checkUsernameAvailability } = useAuth();
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -18,7 +19,15 @@ const SignUp = () => {
     try {
       setError('');
       setLoading(true);
-      await signup(name, email, password);
+      
+      // Check if username is available
+      const response = await checkUsernameAvailability(username);
+      if (!response.available) {
+        setError('Username is already taken. Please choose a different username.');
+        return;
+      }
+      
+      await signup(name, username, email, password);
       navigate('/login');
     } catch (error) {
       setError('Failed to create an account: ' + error.message);
@@ -35,12 +44,23 @@ const SignUp = () => {
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Full Name</label>
             <input
               type="text"
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
@@ -72,7 +92,7 @@ const SignUp = () => {
             className="submit-button" 
             disabled={loading}
           >
-            Sign Up
+            {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>
         

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Comments from "../components/Comments";
 import "../styles/RecipeDetails.css";
 
 export default function RecipeDetails() {
@@ -254,6 +255,9 @@ export default function RecipeDetails() {
           </section>
         </div>
       </div>
+      
+      {/* Comments Section */}
+      <Comments recipeUri={recipe.uri} />
     </div>
   );
 } 
