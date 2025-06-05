@@ -1,26 +1,21 @@
-import { useEffect, useState } from 'react';
-
-import { Input } from '@mui/material';
-import { Button } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
+import { useEffect, useState, useRef } from 'react';
 import Ingredient from './Ingredient.jsx'; 
 import axios from 'axios';
-// import { Typography } from '@mui/material';
 
 import Header from '../Header.jsx';
 import '../../styles/CreateRecipe.css'
-import { ConstructionOutlined } from '@mui/icons-material';
 
 export default function CreateRecipe() {
     const [inputsEnabled, setInputsEnabled] = useState(false);
     const [recipeName, setRecipeName] = useState("");
     const [loading, setLoading] = useState(false);
-    const [ingredients, setIngredients] = useState([]);
+    const [ingredients, setIngredients] = useState([{ name: "", qty: "", unit: "", note: "" }]);
     const [highlightFields, setHighlightFields] = useState(false);
-    const [image, setImage] = useState("");
+    const [imageUrl, setImageUrl] = useState("");
     const [directions, setDirections] = useState("");
     const [yieldAmt, setYieldAmt] = useState("");
     const [calories, setCalories] = useState("");
+    const inputFile = useRef(null);
 
     useEffect(() => {
         const isValid = recipeName.trim().length > 0;
@@ -29,6 +24,13 @@ export default function CreateRecipe() {
             setIngredients([{ name: "", qty: "", unit: "", note: ""}]);
         }
     }, [recipeName])
+
+    // cleanup unused image URL from the browser
+    useEffect(() => {
+        return () => {
+            if (imageUrl) URL.revokeObjectURL(imageUrl);
+        };
+    }, [imageUrl]);
 
     const handleSetRecipeName = (recipeNameValue) => {
         if (loading) return;
@@ -59,62 +61,70 @@ export default function CreateRecipe() {
         setIngredients(updated);
     }
 
-    const handleImageUploadToS3 = (blob) => {
-        console.log("opening file explorer");
-        console.log(`uploading ${blob} to S3`);
-        setImage("lol");
-        console.log("setting image link");
+    const getImage = () => {
+        inputFile.current.click();
+        setImageUrl(inputFile);
+    }
+
+    const handleRemoveImage = () => {
+        console.log("image removed");
+        setImageUrl("");
     }
 
     const handleCreateRecipe = async () => {
-        const updated = [...ingredients];
-        updated.splice(updated.length - 1, 1);
+        const formData = new FormData();
+        const file = inputFile.current.files[0];
+
+        formData.append("name", recipeName);
+        formData.append("calories", calories);
+        formData.append("yieldAmt", yieldAmt);
+        formData.append("directions", directions);
+        formData.append("ingredients", JSON.stringify(ingredients));
+        if (file) {
+            formData.append("image", file);
+        }
 
         try {
-            await axios.post('http://localhost:5001/create', {
-                calories,
-                ingredients: updated,
-                name: recipeName,
-                yieldAmt,
-                directions,
-                image
+            await axios.post("http://localhost:5001/create", formData, {
+                headers: { "Content-Type": "multipart/form-data" }
             });
-
-            // toastify dat DOM 
+        } catch (err) {
+            console.error("Error uploading recipe:", err);
         }
-        catch (error) {
-            console.error("Error from CreateRecipe.jsx when attempting POST:", error);
-        }
-
-        // trim empty object at end of array
-        
-        console.log(`${recipeName} recipe created.`);
-        console.log("Ingredients:", updated);
-        console.log("Directions:", directions);
-        console.log("Yield:", yieldAmt);
-        console.log("Calories:", calories);
-        console.log("Image:", image);
-    }
+};
 
     return (
         <> 
             <Header />
                 <div className='cr-grid-container'>
                     {/* check for existing recipeName before enabling input */}
-                    <input 
-                        className='cr-input2'
-                        placeholder='Enter a name for your new recipe'
-                        onChange={(e) => handleSetRecipeName(e.target.value)}         
-                    />
-                    { image.length > 0 ? (
-                        <div className='cr-input2'>
-                            lol
-                        </div>
-                    ) : 
-                        <>
+                    <div className='cr-top-row-container'>
+                        <input 
+                            className='cr-input2'
+                            placeholder='Enter a name for your new recipe'
+                            onChange={(e) => handleSetRecipeName(e.target.value)}         
+                        />
+                        { imageUrl.length > 0 ? (
+                            <>
+                                
+                                <div className='cr-image-card'>
+                                    <button 
+                                    className='cr-remove-image-button' 
+                                    onClick={handleRemoveImage}
+                                >
+                                    x
+                                </button>
+                                    
+                                    <img src={imageUrl} alt="preview" style={{ width: "100%", height: "100%", borderRadius: "8px" }} />
+                                    
+                                </div>
+                            </>
+                        ) : 
+                            <>
 
-                        </>
-                    }
+                            </>
+                        }
+                    </div>
                     <div className='cr-directions-left-container'>
                         <h2 className='cr-h2-ingredients'>Ingredients</h2>
                         {ingredients.map((ingredient, idx) => (
@@ -178,10 +188,23 @@ export default function CreateRecipe() {
                         
                         <button 
                             className='cr-image-button'
-                            onClick={handleImageUploadToS3}
+                            onClick={getImage}
                         >
                             Add Image
                         </button>
+                        <input
+                            type="file"
+                            ref={inputFile}
+                            style={{ display: "none" }}
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+                                    if (file) {
+                                        const previewURL = URL.createObjectURL(file);
+                                        setImageUrl(previewURL);
+                                        console.log("Selected file:", file);
+                                    }
+                                }}
+                            />
                         <textarea 
                             className='cr-input3'
                             placeholder='Enter your directions here...'

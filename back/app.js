@@ -6,6 +6,7 @@ import cors from "cors";
 import createRouter from "./routes/create.js";
 
 dotenv.config(); // Load the .env file
+console.log("ENV CHECK → AWS_ACCESS_KEY_ID:", process.env.AWS_ACCESS_KEY_ID);
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });

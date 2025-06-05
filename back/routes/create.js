@@ -1,11 +1,22 @@
-import db from "../firebase.js";
 import express from "express";
-const router = express.Router();
-import admin from "firebase-admin";
+import multer from "multer";
+import AWS from "aws-sdk";
+import db from "../firebase.js";
+import dotenv from "dotenv";
 
-if (!admin.apps.length) {
-    admin.initializeApp();
-}
+dotenv.config();
+const router = express.Router();
+
+// configure AWS
+AWS.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION || "us-west-2"
+});
+
+const s3 = new AWS.S3();
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 /* 
     POST: creates new document @ 'recipes' collection
@@ -21,16 +32,30 @@ if (!admin.apps.length) {
         - directions
         - image
 */
-router.post("/", async (req, res) => {
+router.post("/", upload.single("image"), async (req, res) => {    
     try {
-        const { calories, ingredients, name, yieldAmt, directions, image } = req.body;
+        const { name, calories, yieldAmt, directions } = req.body;
+        const ingredients = JSON.parse(req.body.ingredients);
+        let imageUrl = "";
+
+        if (req.file) {
+            const params = {
+                Bucket: "forkedin",
+                Key: `recipes/${Date.now()}_${req.file.originalname}`,
+                Body: req.file.buffer,
+                ContentType: req.file.mimetype
+            };
+
+            const uploadResult = await s3.upload(params).promise();
+            imageUrl = uploadResult.Location;
+        }
 
         console.log("Incoming recipe post:");
         console.log("calories:", calories);
         console.log("name:", name);
         console.log("yieldAmt:", yieldAmt);
         console.log("directions:", directions);
-        console.log("image:", image);
+        console.log("image:", imageUrl);
 
         console.log("ingredients:", ...ingredients);
         if (!Array.isArray(ingredients)) {
@@ -45,12 +70,12 @@ router.post("/", async (req, res) => {
         }
 
         const post = {
-            calories,
-            ingredients,
             name,
+            calories,
             yieldAmt,
             directions,
-            image
+            ingredients,
+            image: imageUrl
         };
         
         const ref = await db.collection("recipes").add(post);
