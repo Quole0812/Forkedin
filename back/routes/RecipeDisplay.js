@@ -26,7 +26,7 @@ router.get("/default", async (req, res) => {
         "Edamam-Account-User": "bananavstaco",
       }
     });
-    console.log("lol trynna look for this")
+    // console.log("lol trynna look for this")
     // console.log(edamamRes);
     res.json(edamamRes.data.hits);
   } catch (err) {
