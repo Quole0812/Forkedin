@@ -1,6 +1,9 @@
 // back/firebase.js
 import admin from "firebase-admin";
-import serviceAccount from "./permissions.json" assert { type: "json" };
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const serviceAccount = require('./permissions.json');
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -8,5 +11,6 @@ if (!admin.apps.length) {
   });
 }
 
-const db = admin.firestore();
-export default db;
+export const db = admin.firestore();
+export const auth = admin.auth();
+export default admin;

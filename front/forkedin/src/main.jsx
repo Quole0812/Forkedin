@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './components/AuthContext.jsx';
 import Header from './components/Header.jsx';
 import RecipeDisplay from './routes/RecipeDisplay.jsx';
+import RecipeDetails from './routes/RecipeDetails.jsx';
 import Login from './routes/login.jsx';
 import SignUp from './routes/signUp.jsx';
 import Home from './routes/Home.jsx';
@@ -45,6 +46,7 @@ const router = createBrowserRouter([
       },
 //       {path: '/', element: <Header />},
       {path: '/recipedisplay', element: <RecipeDisplay />},
+      {path: '/recipedisplay/:id', element: <RecipeDetails />},
     ]
   }
 ])
