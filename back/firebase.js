@@ -1,11 +1,15 @@
 // back/firebase.js
 import admin from "firebase-admin";
-import serviceAccount from "./permissions.json" with { type: "json" };
+import fs from 'fs';
+const serviceAccount = JSON.parse(fs.readFileSync(new URL('./permissions.json', import.meta.url)));
 
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
 
 export const db = admin.firestore();
 export const auth = admin.auth();
