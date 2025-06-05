@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/RecipeDisplay.css"
 import axios from "axios";
-import React from "react";
+import { useAuth } from "../components/AuthContext"
 
 export default function RecipeDisplay() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -10,6 +10,9 @@ export default function RecipeDisplay() {
     const [dbrecipes, setdbRecipes] = useState([]);
     const [filterRecipes, setFilterRecipes] = useState(false);
     const navigate = useNavigate();
+    const { currentUser, logout } = useAuth();
+
+    console.log(currentUser);
 
 
     const handleSearch = async () => {
@@ -78,7 +81,7 @@ export default function RecipeDisplay() {
           console.log("heres the db stuff")
           console.log(res.data);
         } catch (error) {
-          console.error("bruh where the db recipe at");
+          console.error("bruh where the db recipe at", error);
         }
       }
   
@@ -155,6 +158,7 @@ export default function RecipeDisplay() {
             <div><span className="highlight-number">{recipe.ingredients?.length || 0}</span> ingredients</div>
           </div>
         </div>
+        <div><button className="button-13">Bookmark</button></div>
       </div>
     );
   })}
