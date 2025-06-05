@@ -13,11 +13,14 @@ router.post("/batch", async (req, res) => {
 
   try {
     const results = await Promise.all(
-      ids.map(async (id) => {
-        const doc = await db.collection("recipes").doc(id).get();
-        return doc.exists ? { id: doc.id, ...doc.data() } : null;
-      })
+      ids
+        .filter(id => typeof id === "string" && id.trim() !== "" && !id.includes("/"))
+        .map(async (id) => {
+          const doc = await db.collection("recipes").doc(id).get();
+          return doc.exists ? { id: doc.id, ...doc.data() } : null;
+        })
     );
+
 
     const filtered = results.filter(Boolean); // remove nulls
     res.json(filtered);

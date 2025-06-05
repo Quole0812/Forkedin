@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom"
 import "../styles/RecipeDisplay.css"
 import axios from "axios";
 import { useAuth } from "../components/AuthContext"
+import beforeimg from "../assets/bookmark-before-click.png"
+import afterimg from "../assets/bookmark-after-click.png"
 
 export default function RecipeDisplay() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -11,8 +13,72 @@ export default function RecipeDisplay() {
     const [filterRecipes, setFilterRecipes] = useState(false);
     const navigate = useNavigate();
     const { currentUser, logout } = useAuth();
+    const [user, setUser] = useState(null)
 
-    console.log(currentUser);
+    // console.log(currentUser);
+
+      useEffect(() => {
+
+    if (!currentUser || !currentUser.uid) {
+      return;
+    }
+
+      async function fetchUser() {
+        try {
+          const res = await axios.get(
+            `http://localhost:5001/recipedisplay/user/${currentUser.uid}`
+          );
+          setUser(res.data);
+          console.log("here da user");
+          console.log(res.data);
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        } 
+      }
+
+      fetchUser();
+    }, [currentUser]); 
+
+
+
+   const handleBookmark = async (recipeid) => {
+  const isSaved = user?.saved?.includes(recipeid);
+
+  if (!isSaved) {
+    // Add bookmark
+    try {
+      console.log("Adding bookmark:", recipeid);
+      await axios.put(
+        `http://localhost:5001/recipedisplay/user/${currentUser.uid}/${encodeURIComponent(recipeid)}`
+      );
+
+      setUser((prevUser) => ({
+        ...prevUser,
+        saved: prevUser?.saved
+          ? [...prevUser.saved, recipeid]
+          : [recipeid],
+      }));
+    } catch (error) {
+      console.log("yo i cant add the bookmark", error);
+    }
+  } else {
+    // Remove bookmark
+    try {
+      console.log("Removing bookmark:", recipeid);
+      await axios.delete(
+        `http://localhost:5001/recipedisplay/user/${currentUser.uid}/${encodeURIComponent(recipeid)}`
+      );
+
+      setUser((prevUser) => ({
+        ...prevUser,
+        saved: prevUser?.saved?.filter(id => id !== recipeid),
+      }));
+    } catch (error) {
+      console.log("yo i cant remove the bookmark", error);
+    }
+  }
+};
+
 
 
     const handleSearch = async () => {
@@ -92,7 +158,6 @@ export default function RecipeDisplay() {
     );
 
     const displayedRecipes = filterRecipes ? filtereddbrecipes : recipes;
-
     return (
         <>
         <div className="header-container">
@@ -115,7 +180,7 @@ export default function RecipeDisplay() {
         <div className="switch-spot">
           <input type="checkbox" id="user-created" name="user-created" onClick={() => setFilterRecipes(prev => !prev)}/>
           <div className="spacing"></div>
-          <label htmlFor="user-created">filter by Users Created</label>
+          <label>filter by Users Created</label>
         </div>
 
 
@@ -135,6 +200,23 @@ export default function RecipeDisplay() {
         onClick={() => handleRecipeClick(recipe.uri)}
         style={{ cursor: 'pointer' }}
       >
+        <div 
+          className="bookmark-icon"
+          onClick={(e) => {
+            e.stopPropagation();
+            const recipeId = filterRecipes ? recipe.id : recipe.uri;
+            handleBookmark(recipeId);
+          }}
+        >
+          <img 
+            src={
+              user?.saved?.includes(filterRecipes ? recipe.id : recipe.uri)
+                ? afterimg
+                : beforeimg
+            } 
+            alt="Bookmark" 
+          />
+        </div>
         <div className="image-placeholder">
           <img
   src={
@@ -158,7 +240,13 @@ export default function RecipeDisplay() {
             <div><span className="highlight-number">{recipe.ingredients?.length || 0}</span> ingredients</div>
           </div>
         </div>
-        <div><button className="button-13">Bookmark</button></div>
+        {/* <div><button className="button-13"
+        onClick={(e) => {
+          e.stopPropagation();
+          const recipeId = filterRecipes ? recipe.id : recipe.uri;
+          handleBookmark(recipeId);
+        }}
+        >Bookmark</button></div> */}
       </div>
     );
   })}

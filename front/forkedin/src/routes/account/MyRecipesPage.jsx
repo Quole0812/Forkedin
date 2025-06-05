@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from "../../components/AuthContext";
 import { useNavigate } from "react-router-dom";
-import "../../styles/RecipeDisplay.css"; // Reuse existing CSS
+import "../../styles/RecipeDisplay.css"; 
 import "../../styles/MyRecipesPage.css";
 
 const MyRecipesPage = () => {
@@ -12,21 +12,8 @@ const MyRecipesPage = () => {
   useEffect(() => {
     const fetchCreatedRecipes = async () => {
       try {
-        const userRes = await fetch(`http://localhost:5001/users/${currentUser.uid}`);
-        const userData = await userRes.json();
-
-        if (!userData.created || userData.created.length === 0) {
-          setRecipes([]);
-          return;
-        }
-
-        const recipeRes = await fetch("http://localhost:5001/recipes-by-ids/batch", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ids: userData.created })
-        });
-
-        const data = await recipeRes.json();
+        const res = await fetch(`http://localhost:5001/recipedisplay/recipes/by-user/${currentUser.uid}`);
+        const data = await res.json();
         setRecipes(data);
       } catch (err) {
         console.error("Error loading created recipes:", err);

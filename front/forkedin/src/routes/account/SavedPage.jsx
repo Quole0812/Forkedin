@@ -12,7 +12,7 @@ const SavedPage = () => {
   useEffect(() => {
     const fetchSavedRecipes = async () => {
       try {
-        const userRes = await fetch(`http://localhost:5001/users/${currentUser.uid}`);
+        const userRes = await fetch(`http://localhost:5001/users/saved-recipes/${currentUser.uid}`);
         const userData = await userRes.json();
 
         if (!userData.saved || userData.saved.length === 0) {

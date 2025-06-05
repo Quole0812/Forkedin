@@ -1,23 +1,46 @@
+
+
+
 .header-container {
   display: flex;
   align-items: center;
   /* gap: 20px; */
   padding: 10px;
-  margin-left: 200px;
-  margin-right: 220px;
+  margin-left: 610px;
+  margin-right: 640px;
   /* margin-top: 50px; */
 }
 
 .search-bar {
+  /* font-style: italic; */
   flex: 1;
   font-size: 28px;
   padding: 8px 16px;
-  background-color: #fff9db;
-  color:white;
-  border: none;
+  background-color: white;
+  /* color:lightgray; */
+  border: lightgray;
+  border-style: solid;
+  border-width: 2px;
   border-radius: 10px;
   margin-top: 20px;
+  /* width: 50%; */
+  /* box-shadow: 0 4px 4px 0.5px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
+
+.search-bar::placeholder {
+  color:lightgray;
+  font-style: italic;
+}
+
+.search-bar:focus { 
+  border:#ed7700;
+  border-style: solid;
+  border-width: 2px;
+  outline: none;
+  /* color:white; */
+}
+
+
 
 .button-orange {
   width: 120px;
@@ -47,6 +70,7 @@
   /* margin:0px, auto; */
   align-self: center;
   margin-left: 10%;
+  margin-right:10%;
   max-width: 80%;
 }
 
@@ -214,3 +238,28 @@ input[type="checkbox"]:checked::after {
   outline: 0;
 }
 
+.bookmark-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  /* opacity: 0; */
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.bookmark-icon:hover {
+  transform: translate(-1px, -1px);
+}
+
+.card:hover .bookmark-icon {
+  opacity: 1;
+}
+
+.bookmark-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  cursor: pointer;
+}
