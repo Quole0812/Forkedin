@@ -23,9 +23,9 @@ const AccountPage = () => {
       <main className="account-main">
         <Routes>
             <Route path="user" element={<UserInfoPage />} />
-            <Route path="recipes" element={<h2>My Recipes</h2>} />
-            <Route path="saved" element={<h2>Saved</h2>} />
-            <Route path="admin" element={<h2>Admin View</h2>} />
+            <Route path="recipes" element={<MyRecipesPage />} />
+            <Route path="saved" element={<SavedPage />} />
+            <Route path="admin" element={<AdminViewPage />} />
         </Routes>
       </main>
     </div>

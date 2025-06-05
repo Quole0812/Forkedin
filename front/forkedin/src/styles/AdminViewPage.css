@@ -1,0 +1,57 @@
+/*Set padding to 0*/
+.admin-list {
+  padding: 0px; 
+}
+
+
+.admin-list-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #ccc;
+  background: #fff;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.recipe-img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+
+}
+
+.recipe-info {
+  flex: 1;
+  padding: 0 16px;
+  border: 0px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-pfp {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.publish-btn-container {
+  margin-left: auto;
+}
+
+.publish-btn {
+  padding: 6px 12px;
+  background-color: #3b783b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.user-info {
+  border: 0px solid #e2e8f0;
+} 

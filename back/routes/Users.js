@@ -222,4 +222,25 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
+// PATCH user update
+router.patch("/:uid", async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const updates = req.body;
+
+    if (!uid || Object.keys(updates).length === 0) {
+      return res.status(400).json({ error: "Missing UID or update fields" });
+    }
+
+    await db.collection("users").doc(uid).update(updates);
+    const updatedDoc = await db.collection("users").doc(uid).get();
+    const userData = updatedDoc.data();
+
+    res.json({ message: "User updated successfully", user: { id: uid, ...userData } });
+  } catch (error) {
+    console.error("Error updating user by UID:", error);
+    res.status(500).json({ error: "Failed to update user" });
+  }
+});
+
 export default router; 

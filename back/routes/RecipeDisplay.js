@@ -131,6 +131,49 @@ router.get("/user", async (req, res) => {
   }
 });
 
+// GET recipes by author UID
+router.get("/user/:uid", async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const recipesRef = db.collection("recipes");
+    const snapshot = await recipesRef.where("authorId", "==", uid).get();
+
+    const recipes = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    res.json(recipes);
+  } catch (err) {
+    console.error("Error fetching user's recipes:", err);
+    res.status(500).json({ error: "Failed to fetch user's recipes" });
+  }
+});
+
+// Get unpublished recipes (admin only)
+router.get("/unpublished", async (req, res) => {
+  try {
+    const snapshot = await db.collection("recipes").where("published", "==", false).get();
+    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.json(data);
+  } catch (err) {
+    console.error("Error fetching unpublished recipes:", err);
+    res.status(500).json({ error: "Failed to fetch unpublished" });
+  }
+});
+
+// Publish a recipe
+router.patch("/publish/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.collection("recipes").doc(id).update({ published: true });
+    res.json({ message: "Recipe published" });
+  } catch (err) {
+    console.error("Error publishing recipe:", err);
+    res.status(500).json({ error: "Failed to publish" });
+  }
+});
 
 
 export default router;

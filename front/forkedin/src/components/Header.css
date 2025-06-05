@@ -200,3 +200,12 @@
         justify-content: space-between;
     }
 }
+
+.user-welcome {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.user-welcome:hover {
+  text-decoration: underline;
+}
