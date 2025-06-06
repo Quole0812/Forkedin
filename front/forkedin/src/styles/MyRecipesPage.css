@@ -1,0 +1,5 @@
+.myrecipes-wrapper .grid-container {
+  justify-content: flex-start !important; /* Left-align cards */
+  margin-left: 0 !important;              /* Override shared 10% margin */
+  max-width: 100% !important;             /* Allow full width */
+}

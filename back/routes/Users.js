@@ -1,6 +1,7 @@
 import express from "express";
 import { db, auth } from "../firebase.js";
 import dotenv from "dotenv";
+import axios from "axios";
 
 dotenv.config();
 
@@ -209,19 +210,98 @@ router.get("/:userId", async (req, res) => {
     }
 
     const userData = userDoc.data();
-    // Return only public information
-    const publicData = {
+    
+    // Return full user data for internal/private use
+    res.json({
       id: userId,
-      fullName: userData.fullName,
-      username: userData.username,
-      createdAt: userData.createdAt
-    };
+      ...userData
+    });
 
-    res.json({ user: publicData });
   } catch (error) {
     console.error('Error getting user:', error);
     res.status(500).json({ error: 'Failed to get user' });
   }
 });
+
+// PATCH user update
+router.patch("/:uid", async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const updates = req.body;
+
+    if (!uid || Object.keys(updates).length === 0) {
+      return res.status(400).json({ error: "Missing UID or update fields" });
+    }
+
+    await db.collection("users").doc(uid).update(updates);
+    const updatedDoc = await db.collection("users").doc(uid).get();
+    const userData = updatedDoc.data();
+
+    res.json({ message: "User updated successfully", user: { id: uid, ...userData } });
+  } catch (error) {
+    console.error("Error updating user by UID:", error);
+    res.status(500).json({ error: "Failed to update user" });
+  }
+});
+
+// GET all saved recipes (user-generated + Edamam)
+router.get("/saved-recipes/:uid", async (req, res) => {
+  console.log(`[GET] /users/saved-recipes/${req.params.uid}`);
+  try {
+    const { uid } = req.params;
+    const userDoc = await db.collection("users").doc(uid).get();
+
+    if (!userDoc.exists) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const saved = userDoc.data()?.saved || [];
+
+    const internalIds = saved.filter(item => !item.startsWith("http"));
+    const edamamUris = saved.filter(item => item.startsWith("http"));
+
+    // Fetch internal (Firestore) recipes
+    const internalResults = await Promise.all(
+      internalIds.map(async id => {
+        try {
+          const doc = await db.collection("recipes").doc(id).get();
+          return doc.exists ? { id: doc.id, ...doc.data() } : null;
+        } catch {
+          return null;
+        }
+      })
+    );
+
+    // Fetch Edamam recipes
+    const edamamResults = await Promise.all(
+      edamamUris.map(async uri => {
+        try {
+          const res = await axios.get("https://api.edamam.com/api/recipes/v2/by-uri", {
+            params: {
+              type: "public",
+              uri: uri,
+              app_id: process.env.EDAMAM_APP_ID,
+              app_key: process.env.EDAMAM_APP_KEY,
+            },
+              headers: {
+              "Edamam-Account-User": "bananavstaco",
+            },
+          });
+          return res.data.hits[0]?.recipe || null;
+        } catch (err) {
+          console.error(`Failed to fetch Edamam recipe for ${uri}:`, err?.response?.data || err.message);
+          return null;
+        }
+      })
+    );
+
+    const allRecipes = [...internalResults, ...edamamResults].filter(Boolean);
+    res.json(allRecipes);
+  } catch (error) {
+    console.error("Error fetching saved recipes:", error);
+    res.status(500).json({ error: "Failed to fetch saved recipes" });
+  }
+});
+
 
 export default router; 

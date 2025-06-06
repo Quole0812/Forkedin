@@ -9,30 +9,6 @@ dotenv.config();
 const router = express.Router();
 const FieldValue = adminInstance.firestore.FieldValue;
 
-router.get("/official", async (req, res) => {
-  const { query } = req.query;
-  try {
-    const edamamRes = await axios.get("https://api.edamam.com/api/recipes/v2", {
-      params: {
-        type: "public",
-        q: query,
-        app_id: process.env.EDAMAM_APP_ID,
-        app_key: process.env.EDAMAM_APP_KEY,
-        to: 10
-      }, 
-      headers: {
-        "Edamam-Account-User": "bananavstaco",
-      }
-    });
-    console.log("lol trynna look for this")
-    // console.log(edamamRes);
-    res.json(edamamRes.data.hits);
-  } catch (err) {
-    console.error("Failed to fetch Edamam recipes:", err?.response?.data || err.message);
-    res.status(500).json({ error: "my fellow brother of america, we failed to get recipe" });
-  }
-});
-
 //get default route 
 
 router.get("/default", async (req, res) => {
@@ -50,7 +26,7 @@ router.get("/default", async (req, res) => {
         "Edamam-Account-User": "bananavstaco",
       }
     });
-    console.log("lol trynna look for this")
+    // console.log("lol trynna look for this")
     // console.log(edamamRes);
     res.json(edamamRes.data.hits);
   } catch (err) {
@@ -178,6 +154,49 @@ router.get("/user", async (req, res) => {
   }
 });
 
+// GET recipes by author UID
+router.get("/recipes/by-user/:uid", async (req, res) => {
+  const { uid } = req.params;
+
+  try {
+    const recipesRef = db.collection("recipes");
+    const snapshot = await recipesRef.where("authorId", "==", uid).get();
+
+    const recipes = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    res.json(recipes);
+  } catch (err) {
+    console.error("Error fetching user's recipes:", err);
+    res.status(500).json({ error: "Failed to fetch user's recipes" });
+  }
+});
+
+// Get unpublished recipes (admin only)
+router.get("/unpublished", async (req, res) => {
+  try {
+    const snapshot = await db.collection("recipes").where("published", "==", false).get();
+    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.json(data);
+  } catch (err) {
+    console.error("Error fetching unpublished recipes:", err);
+    res.status(500).json({ error: "Failed to fetch unpublished" });
+  }
+});
+
+// Publish a recipe
+router.patch("/publish/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.collection("recipes").doc(id).update({ published: true });
+    res.json({ message: "Recipe published" });
+  } catch (err) {
+    console.error("Error publishing recipe:", err);
+    res.status(500).json({ error: "Failed to publish" });
+  }
+});
 router.get("/user/:id", async (req, res) => {
   const userId = req.params.id;
 

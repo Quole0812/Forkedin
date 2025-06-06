@@ -7,8 +7,8 @@ import createRouter from "./routes/create.js";
 import recipeDisplay from "./routes/RecipeDisplay.js";
 import Users from "./routes/Users.js";
 import Comments from "./routes/Comments.js";
+import RecipesByIds from "./routes/RecipesByIds.js";
 // import admin from "firebase-admin"
-
 
 // if (!admin.apps.length) {
 //   admin.initializeApp();
@@ -21,6 +21,11 @@ dotenv.config(); // Load the .env file
 
 const app = express();
 const port = 5001;
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 
 // use middleware to parse json request bodies
 app.use(bodyParser.json());
@@ -35,6 +40,7 @@ app.use("/create", createRouter);
 app.use("/recipedisplay", recipeDisplay);
 app.use("/users", Users);
 app.use("/comments", Comments);
+app.use("/recipes-by-ids", RecipesByIds);
 
 
 
