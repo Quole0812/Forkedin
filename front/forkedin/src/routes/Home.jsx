@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../styles/Home.css';
 import foodImage from '../assets/foodImage.png';
 import section3 from '../assets/section3.jpg';
+import section4 from '../assets/section4.png'
 import { useNavigate } from 'react-router-dom';
 
 
@@ -161,7 +162,7 @@ const Home = () => {
             <h2>Connect</h2>
             <p>Join a vibrant community of food lovers and innovators.</p>
           </div>
-          <img src={section3} alt="Connect Section" className="connect-image" />
+          <img src={section4} alt="Connect Section" className="connect-image" />
         </div>
       </section>
     </div>
