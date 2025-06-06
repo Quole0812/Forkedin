@@ -16,7 +16,7 @@ export default function Chat({ recipe }) {
 
   const toggleChat = () => setExpanded(prev => !prev);
 
-  const submitQuestion = async () => {
+const submitQuestion = async () => {
   if (!input.trim()) return;
 
   const user = auth.currentUser;
@@ -25,12 +25,13 @@ export default function Chat({ recipe }) {
     return;
   }
 
-  setMessages(prev => [...prev, input]); // optionally show user message immediately
+  const token = await user.getIdToken();
+  setMessages(prev => [...prev, { role: "user", content: input }]);
   setLoading(true);
+  const userMessage = input;
+  setInput("");
 
   try {
-    const token = await user.getIdToken();
-
     const res = await fetch("http://localhost:5001/chat", {
       method: "POST",
       headers: {
@@ -38,7 +39,7 @@ export default function Chat({ recipe }) {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        message: input,
+        message: userMessage,
         recipe,
       }),
     });
@@ -46,13 +47,12 @@ export default function Chat({ recipe }) {
     const data = await res.json();
 
     if (data.reply) {
-      setMessages(prev => [...prev, data.reply]); // assistant reply
+      setMessages(prev => [...prev, { role: "assistant", content: data.reply }]);
     }
   } catch (err) {
     console.error("Chat error:", err);
   } finally {
     setLoading(false);
-    setInput("");
   }
 };
 
@@ -73,9 +73,11 @@ export default function Chat({ recipe }) {
                 </button>
                 {/*handle initialize chat for recipes with no chat history*/}
                 <p>This is where the chat is</p>
-                    <div className="chat-log">        
+                    <div className="chat-log">
                         {messages.map((msg, idx) => (
-                            <p key={idx} className="chat-message">{msg}</p>
+                            <p key={idx} className={`chat-message ${msg.role}`}>
+                            {msg.role === "assistant" ? "🤖 " : "🧑 "} {msg.content}
+                            </p>
                         ))}
                     </div>
                 <div className="chat-window-input">
