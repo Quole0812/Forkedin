@@ -160,7 +160,7 @@ router.get("/recipes/by-user/:uid", async (req, res) => {
 
   try {
     const recipesRef = db.collection("recipes");
-    const snapshot = await recipesRef.where("authorId", "==", uid).get();
+    const snapshot = await recipesRef.where("createdBy", "==", uid).get();
 
     const recipes = snapshot.docs.map(doc => ({
       id: doc.id,

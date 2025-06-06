@@ -15,6 +15,7 @@ const MyRecipesPage = () => {
         const res = await fetch(`http://localhost:5001/recipedisplay/recipes/by-user/${currentUser.uid}`);
         const data = await res.json();
         setRecipes(data);
+        console.log(res.data);
       } catch (err) {
         console.error("Error loading created recipes:", err);
       }
@@ -39,7 +40,7 @@ const MyRecipesPage = () => {
             <div
               className="card"
               key={i}
-              onClick={() => handleRecipeClick(recipe.uri || recipe.id)}
+              onClick={() => handleRecipeClick(recipe.id)}
               style={{ cursor: "pointer" }}
             >
               <div className="image-placeholder">

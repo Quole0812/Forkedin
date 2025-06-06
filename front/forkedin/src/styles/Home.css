@@ -349,3 +349,7 @@ section {
   margin: 0.25rem 0 2rem;
   max-width: 600px;
 }
+
+.carousel::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
