@@ -8,6 +8,7 @@ import recipeDisplay from "./routes/RecipeDisplay.js";
 import Users from "./routes/Users.js";
 import Comments from "./routes/Comments.js";
 import RecipesByIds from "./routes/RecipesByIds.js";
+import Chat from "./routes/Chat.js";
 // import admin from "firebase-admin"
 
 // if (!admin.apps.length) {
@@ -15,15 +16,15 @@ import RecipesByIds from "./routes/RecipesByIds.js";
 // }
 
 dotenv.config(); // Load the .env file
-// const openai = new OpenAI({
-//     apiKey: process.env.OPENAI_API_KEY,
-// });
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+});
 
 const app = express();
 const port = 5001;
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
   credentials: true
 }));
 
@@ -41,6 +42,7 @@ app.use("/recipedisplay", recipeDisplay);
 app.use("/users", Users);
 app.use("/comments", Comments);
 app.use("/recipes-by-ids", RecipesByIds);
+app.use("/chat", Chat);
 
 
 
@@ -48,7 +50,7 @@ app.listen(port, () => {
    console.log(`Server is running on http://localhost:${port}`);
 });
 
-
+export default openai;
 
 
 //get for completion if u wanna use

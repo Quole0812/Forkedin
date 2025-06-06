@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Comments from "../components/Comments";
+import Chat from "../components/Chat";
 import "../styles/RecipeDetails.css";
+import "../styles/Chat.css";
 
 export default function RecipeDetails() {
   const { id } = useParams();
@@ -66,6 +68,7 @@ export default function RecipeDetails() {
 
   return (
     <div className="recipe-details-container">
+      <Chat recipe={{ ...recipe }}/>
       <button onClick={() => navigate('/recipedisplay')} className="back-button">
         ← Back to Recipes
       </button>
@@ -221,7 +224,21 @@ export default function RecipeDetails() {
                     )}
                   </div>
                 )}
+
+              </div>
+            )}
+          </section>
+        </div>
+
+        <div className="recipe-sidebar">
+          
+          <section className="nutrition-section">
+            <h2>Nutrition Facts</h2>
+            <div className="nutrition-per-serving">
+              <p>Per serving (serves {recipe.yield})</p>
+
               </section>
+
             </div>
 
             <div className="recipe-sidebar">
