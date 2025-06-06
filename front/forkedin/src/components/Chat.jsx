@@ -2,19 +2,59 @@ import { useState } from "react";
 import { ArrowUpward as ArrowIcon, Chat as ChatIcon, Close as CloseIcon } from "@mui/icons-material";
 import "../styles/Chat.css";
 
+import { getAuth } from "firebase/auth";
+
+
+
+
 export default function Chat({ recipe }) {
   const [expanded, setExpanded] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const auth = getAuth();
 
   const toggleChat = () => setExpanded(prev => !prev);
 
-  const submitQuestion = () => {
-    if (!input.trim()) return;
-    setMessages(prev => [...messages, input]);
+  const submitQuestion = async () => {
+  if (!input.trim()) return;
+
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Please sign in to chat.");
+    return;
+  }
+
+  setMessages(prev => [...prev, input]); // optionally show user message immediately
+  setLoading(true);
+
+  try {
+    const token = await user.getIdToken();
+
+    const res = await fetch("http://localhost:5001/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        message: input,
+        recipe,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.reply) {
+      setMessages(prev => [...prev, data.reply]); // assistant reply
+    }
+  } catch (err) {
+    console.error("Chat error:", err);
+  } finally {
+    setLoading(false);
     setInput("");
-  };
+  }
+};
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") submitQuestion();

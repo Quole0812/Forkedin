@@ -1,27 +1,46 @@
 import express from "express";
-import { db } from "../firebase.js";
+import { auth as adminAuth } from "../firebase.js"; // ⬅ use this!
 import dotenv from "dotenv";
 import openai from "../app.js";
 
 dotenv.config();
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-    const { recipe } = req.body;
+// Middleware to verify Firebase ID token
+async function verifyToken(req, res, next) {
+  const header = req.headers.authorization;
 
-    try {
-        const response = await openai.chat.completion.create({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "assistant", content: `Would you like help making ${recipe.label}` }]
-        });
+  if (!header || !header.startsWith("Bearer ")) {
+    return res.status(403).send("Unauthorized");
+  }
 
-        const reply = response.choices[0].message.content;
-        res.json({ reply });
-    }
-    catch (error) {
-        console.error("Error:", error);
-        res.status(500).json({error: 'Internal Server Error'});
-    }
+  const idToken = header.split("Bearer ")[1];
+
+  try {
+    const decodedToken = await adminAuth.verifyIdToken(idToken);
+    req.user = decodedToken; // attach the user info
+    next();
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    res.status(403).send("Unauthorized");
+  }
+}
+
+router.post("/", verifyToken, async (req, res) => {
+  const { recipe, message } = req.body;
+  const userId = req.user.uid;
+
+  try {
+    console.log(`[${userId}] asked: ${message}`);
+
+    // dummy reply for now
+    res.json({ reply: `Thanks for asking about ${recipe.label}, ${req.user.name || "friend"}!` });
+
+    // for later: call openai if needed
+  } catch (err) {
+    console.error("Chat error:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 export default router;
