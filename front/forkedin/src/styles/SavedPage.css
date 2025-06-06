@@ -3,3 +3,23 @@
   margin-left: 0 !important;
   max-width: 100% !important;
 }
+
+.filter-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.toggle-btn {
+  padding: 0.5rem 1rem;
+  background: #eee;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.toggle-btn.active {
+  background: #d89754;
+  color: white;
+}

@@ -1,6 +1,7 @@
 import express from "express";
 import { db, auth } from "../firebase.js";
 import dotenv from "dotenv";
+import axios from "axios";
 
 dotenv.config();
 
@@ -245,6 +246,7 @@ router.patch("/:uid", async (req, res) => {
 
 // GET all saved recipes (user-generated + Edamam)
 router.get("/saved-recipes/:uid", async (req, res) => {
+  console.log(`[GET] /users/saved-recipes/${req.params.uid}`);
   try {
     const { uid } = req.params;
     const userDoc = await db.collection("users").doc(uid).get();
@@ -280,6 +282,9 @@ router.get("/saved-recipes/:uid", async (req, res) => {
               uri: uri,
               app_id: process.env.EDAMAM_APP_ID,
               app_key: process.env.EDAMAM_APP_KEY,
+            },
+              headers: {
+              "Edamam-Account-User": "bananavstaco",
             },
           });
           return res.data.hits[0]?.recipe || null;

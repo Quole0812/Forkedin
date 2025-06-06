@@ -26,7 +26,7 @@ router.get("/default", async (req, res) => {
         "Edamam-Account-User": "bananavstaco",
       }
     });
-    console.log("lol trynna look for this")
+    // console.log("lol trynna look for this")
     // console.log(edamamRes);
     res.json(edamamRes.data.hits);
   } catch (err) {
@@ -62,25 +62,71 @@ router.get("/official", async (req, res) => {
 router.get("/recipe/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    // Decode the URI since it was URL encoded
-    const decodedUri = decodeURIComponent(id);
+    // Check if this looks like a Firebase document ID (shorter, alphanumeric)
+    // vs. a URI (longer, contains special characters and "recipe_")
+    const isFirebaseId = !id.includes("recipe_") && !id.includes("http") && id.length < 50;
     
-    const edamamRes = await axios.get("https://api.edamam.com/api/recipes/v2/by-uri", {
-      params: {
-        type: "public",
-        uri: decodedUri,
-        app_id: process.env.EDAMAM_APP_ID,
-        app_key: process.env.EDAMAM_APP_KEY
-      }, 
-      headers: {
-        "Edamam-Account-User": "bananavstaco",
+    if (isFirebaseId) {
+      // This is a user-created recipe from Firebase
+      const recipeRef = db.collection("recipes").doc(id);
+      const recipeSnap = await recipeRef.get();
+      
+      if (!recipeSnap.exists) {
+        return res.status(404).json({ error: "Recipe not found" });
       }
-    });
-    
-    if (edamamRes.data.hits && edamamRes.data.hits.length > 0) {
-      res.json(edamamRes.data.hits[0]);
+      
+      const recipeData = { id: recipeSnap.id, ...recipeSnap.data() };
+      
+      // Format the user recipe to match the structure expected by the frontend
+      const formattedRecipe = {
+        recipe: {
+          // Map user recipe fields to match API structure
+          label: recipeData.label || recipeData.name,
+          image: recipeData.image,
+          source: recipeData.source || "User Created",
+          url: recipeData.url || "",
+          yield: recipeData.yield || recipeData.yieldAmt,
+          calories: recipeData.calories,
+          totalTime: recipeData.totalTime,
+          ingredientLines: recipeData.ingredientLines || [],
+          instructions: recipeData.instructions || [],
+          cuisineType: recipeData.cuisineType || [],
+          mealType: recipeData.mealType || [],
+          dishType: recipeData.dishType || [],
+          dietLabels: recipeData.dietLabels || [],
+          healthLabels: recipeData.healthLabels || [],
+          cautions: recipeData.cautions || [],
+          uri: recipeData.uri || `user_recipe_${id}`,
+          // User recipes don't have nutrition data, so we'll leave these empty
+          totalNutrients: {},
+          totalDaily: {},
+          // Add a flag to identify this as a user recipe
+          isUserCreated: true
+        }
+      };
+      
+      return res.json(formattedRecipe);
     } else {
-      res.status(404).json({ error: "Recipe not found" });
+      // This is an API recipe URI - handle as before
+      const decodedUri = decodeURIComponent(id);
+      
+      const edamamRes = await axios.get("https://api.edamam.com/api/recipes/v2/by-uri", {
+        params: {
+          type: "public",
+          uri: decodedUri,
+          app_id: process.env.EDAMAM_APP_ID,
+          app_key: process.env.EDAMAM_APP_KEY
+        }, 
+        headers: {
+          "Edamam-Account-User": "bananavstaco",
+        }
+      });
+      
+      if (edamamRes.data.hits && edamamRes.data.hits.length > 0) {
+        res.json(edamamRes.data.hits[0]);
+      } else {
+        res.status(404).json({ error: "Recipe not found" });
+      }
     }
   } catch (err) {
     console.error("Failed to fetch specific recipe:", err?.response?.data || err.message);

@@ -13,7 +13,8 @@ export default function RecipeDisplay() {
     const [filterRecipes, setFilterRecipes] = useState(false);
     const navigate = useNavigate();
     const { currentUser, logout } = useAuth();
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(null);
+
 
     // console.log(currentUser);
 

@@ -19,7 +19,7 @@ const Home = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const queries = ["american", "mexican", "italian", "indian", "chinese", "thai", "french"];
+        const queries = ["American", "Italian", "Mexican", "Japanese", "Indian"];
         
         // Fetch all in parallel
         const responses = await Promise.all(

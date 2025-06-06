@@ -6,6 +6,10 @@
   line-height: 1.6;
 }
 
+/* .section {
+  height:fit-content;
+} */
+
 .back-button {
   background-color: #1c3c09;
   color: white;
@@ -67,7 +71,9 @@
   border-radius: 8px;
   border-left: 4px solid #ff9800;
   margin-top: 10px;
-  
+
+  height:fit-content;
+
 }
 
 .cautions-section-header h3 {
@@ -99,6 +105,18 @@
   color: #1c3c09;
   margin-bottom: 10px;
   font-weight: bold;
+}
+
+.user-created-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #EB7A18 0%, #d86915 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .recipe-source {
@@ -240,6 +258,32 @@
   margin-bottom: 40px;
 }
 
+/* When recipe-content contains side-by-side layout, use full width */
+.recipe-content:has(.recipe-side-by-side) {
+  display: block;
+}
+
+/* Full width layout for side-by-side content */
+.recipe-content.full-width {
+  display: block;
+}
+
+/* Side-by-side layout for recipes without nutrition data */
+.recipe-side-by-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.recipe-side-by-side h2 {
+  color: #1c3c09;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #ed7700;
+  padding-bottom: 5px;
+}
+
 .recipe-main h2 {
   color: #1c3c09;
   font-size: 1.5rem;
@@ -331,11 +375,13 @@
   font-weight: normal;
 }
 
+
+
 .recipe-sidebar {
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 10px;
-  height: fit-content;
+  height: 40%;
 }
 
 .nutrition-section h2 {
@@ -396,6 +442,10 @@
   }
   
   .recipe-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .recipe-side-by-side {
     grid-template-columns: 1fr;
   }
   
