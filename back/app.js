@@ -8,6 +8,7 @@ import recipeDisplay from "./routes/RecipeDisplay.js";
 import Users from "./routes/Users.js";
 import Comments from "./routes/Comments.js";
 import RecipesByIds from "./routes/RecipesByIds.js";
+import Chat from "./routes/Chat.js";
 // import admin from "firebase-admin"
 
 // if (!admin.apps.length) {
@@ -41,6 +42,7 @@ app.use("/recipedisplay", recipeDisplay);
 app.use("/users", Users);
 app.use("/comments", Comments);
 app.use("/recipes-by-ids", RecipesByIds);
+app.use("/chat", Chat);
 
 
 

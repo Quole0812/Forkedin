@@ -16,6 +16,10 @@
   transition: all 0.3s ease;
 }
 
+.chat-open-button:hover {
+   background-color: #eb7b18a8; 
+}
+
 .chat-window {
   position: fixed;
   bottom: 0;
@@ -40,8 +44,15 @@
   background: white;
   border: 2px solid #EB7A18;
   color: #EB7A18;
-  border-radius: 50%;
+  border-radius: 100%;
   cursor: pointer;
   transition: all 0.3 ease;
+  padding-top: .25rem;
+  transition: all 0.3s ease;
+}
+
+.chat-close-button:hover {
+    background-color: #EB7A18;
+    color: white;
 }
 
