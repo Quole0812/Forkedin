@@ -4,7 +4,7 @@ import foodImage from '../assets/foodImage.png';
 import section3 from '../assets/section3.jpg';
 import section4 from '../assets/section4.png'
 import { useNavigate } from 'react-router-dom';
-
+import { getAuth } from "firebase/auth";
 
 import ScrollSidebar from '../components/ScrollSidebar';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -83,7 +83,16 @@ const Home = () => {
               and connect with a community that loves to cook and innovate.
             </p>
             <nav className="get-started">
-              <button onClick={() => window.location.href = "/login"}>
+              <button
+                onClick={() => {
+                  const user = getAuth().currentUser;
+                  if (user) {
+                    navigate('/recipedisplay');
+                  } else {
+                    navigate('/login');
+                  }
+                }}
+              >
                 Get Started
               </button>
             </nav>
@@ -140,7 +149,7 @@ const Home = () => {
             </div>
           </div>
 
-          <button className="explore-button" onClick={() => navigate('/recipes')}>
+          <button className="explore-button" onClick={() => navigate('/recipedisplay')}>
             Explore
           </button>
         </div>
