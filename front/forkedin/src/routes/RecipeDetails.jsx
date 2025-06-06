@@ -68,7 +68,7 @@ export default function RecipeDetails() {
 
   return (
     <div className="recipe-details-container">
-      <Chat />
+      <Chat recipe={{ ...recipe }}/>
       <button onClick={() => navigate('/recipedisplay')} className="back-button">
         ← Back to Recipes
       </button>

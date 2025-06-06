@@ -16,9 +16,9 @@ import Chat from "./routes/Chat.js";
 // }
 
 dotenv.config(); // Load the .env file
-// const openai = new OpenAI({
-//     apiKey: process.env.OPENAI_API_KEY,
-// });
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+});
 
 const app = express();
 const port = 5001;
@@ -50,7 +50,7 @@ app.listen(port, () => {
    console.log(`Server is running on http://localhost:${port}`);
 });
 
-
+export default openai;
 
 
 //get for completion if u wanna use
