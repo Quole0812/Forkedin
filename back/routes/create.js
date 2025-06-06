@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import AWS from "aws-sdk";
-import db from "../firebase.js";
+import { db } from "../firebase.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -21,20 +21,47 @@ const upload = multer({ storage });
 /* 
     POST: creates new document @ 'recipes' collection
     Fields (string): 
-        - calories:
+        - calories
         - ingredients:
             - name
-                - qty
-                - unit
-                - note
+            - qty
+            - unit
+            - note
         - name
         - yieldAmt
         - directions
         - image
+        - source
+        - url
+        - totalTime
+        - cuisineType
+        - mealType
+        - dishType
+        - dietLabels
+        - healthLabels
+        - cautions
+        - instructions
+        - ingredientLines
 */
 router.post("/", upload.single("image"), async (req, res) => {    
     try {
-        const { name, calories, yieldAmt, directions } = req.body;
+        const { 
+            name, 
+            calories, 
+            yieldAmt, 
+            source,
+            url,
+            totalTime,
+            cuisineType,
+            mealType,
+            dishType,
+            dietLabels,
+            healthLabels,
+            cautions,
+            instructions,
+            ingredientLines
+        } = req.body;
+        
         const ingredients = JSON.parse(req.body.ingredients);
         let imageUrl = "";
 
@@ -54,8 +81,10 @@ router.post("/", upload.single("image"), async (req, res) => {
         console.log("calories:", calories);
         console.log("name:", name);
         console.log("yieldAmt:", yieldAmt);
-        console.log("directions:", directions);
         console.log("image:", imageUrl);
+        console.log("source:", source);
+        console.log("url:", url);
+        console.log("totalTime:", totalTime);
 
         console.log("ingredients:", ...ingredients);
         if (!Array.isArray(ingredients)) {
@@ -69,13 +98,46 @@ router.post("/", upload.single("image"), async (req, res) => {
             });
         }
 
+        // Parse JSON fields that come as strings
+        const parsedCuisineType = cuisineType ? JSON.parse(cuisineType) : [];
+        const parsedMealType = mealType ? JSON.parse(mealType) : [];
+        const parsedDishType = dishType ? JSON.parse(dishType) : [];
+        const parsedDietLabels = dietLabels ? JSON.parse(dietLabels) : [];
+        const parsedHealthLabels = healthLabels ? JSON.parse(healthLabels) : [];
+        const parsedCautions = cautions ? JSON.parse(cautions) : [];
+        const parsedInstructions = instructions ? JSON.parse(instructions) : [];
+        const parsedIngredientLines = ingredientLines ? JSON.parse(ingredientLines) : [];
+
+        // Create recipe object that matches Edamam API structure for compatibility
         const post = {
+            // Original fields
             name,
-            calories,
-            yieldAmt,
-            directions,
+            calories: parseInt(calories) || 0,
+            yieldAmt: parseInt(yieldAmt) || 1,
             ingredients,
-            image: imageUrl
+            image: imageUrl,
+            
+            // New fields for recipe details compatibility
+            label: name, // Recipe details page expects 'label' field
+            source: source || "User Created",
+            url: url || "",
+            yield: parseInt(yieldAmt) || 1, // Recipe details expects 'yield' not 'yieldAmt'
+            totalTime: parseInt(totalTime) || 0,
+            cuisineType: parsedCuisineType,
+            mealType: parsedMealType,
+            dishType: parsedDishType,
+            dietLabels: parsedDietLabels,
+            healthLabels: parsedHealthLabels,
+            cautions: parsedCautions,
+            instructions: parsedInstructions,
+            ingredientLines: parsedIngredientLines,
+            
+            // Add timestamp for user-created recipes
+            createdAt: new Date().toISOString(),
+            isUserCreated: true,
+            
+            // Generate a unique URI for user recipes
+            uri: `user_recipe_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
         
         const ref = await db.collection("recipes").add(post);

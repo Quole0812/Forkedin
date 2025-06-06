@@ -91,27 +91,32 @@ export default function RecipeDetails() {
         
         <div className="recipe-basic-info">
           <h1 className="recipe-title">{recipe.label}</h1>
+          {recipe.isUserCreated && (
+            <div className="user-created-badge">
+              👨‍🍳 Community Recipe
+            </div>
+          )}
           <p className="recipe-source">Source: {recipe.source}</p>
           {recipe.url && (
             <a href={recipe.url} target="_blank" rel="noopener noreferrer" className="original-recipe-link">
-              View Original Recipe & Instructions
+              {recipe.isUserCreated ? "View Recipe URL" : "View Original Recipe & Instructions"}
             </a>
           )}
           
           <div className="recipe-stats">
             <div className="stat">
-              <span className="stat-value">{Math.round(recipe.calories)}</span>
+              <span className="stat-value">{Math.round(recipe.calories || 0)}</span>
               <span className="stat-label">Calories</span>
             </div>
             <div className="stat">
-              <span className="stat-value">{recipe.yield}</span>
+              <span className="stat-value">{recipe.yield || 1}</span>
               <span className="stat-label">Servings</span>
             </div>
             <div className="stat">
-              <span className="stat-value">{recipe.ingredients?.length || 0}</span>
+              <span className="stat-value">{recipe.ingredientLines?.length || 0}</span>
               <span className="stat-label">Ingredients</span>
             </div>
-            {recipe.totalTime && (
+            {recipe.totalTime && recipe.totalTime > 0 && (
               <div className="stat">
                 <span className="stat-value">{recipe.totalTime}</span>
                 <span className="stat-label">Minutes</span>
@@ -179,81 +184,115 @@ export default function RecipeDetails() {
         </div>
       </div>
 
-      <div className="recipe-content">
-        <div className="recipe-main">
-          <section className="ingredients-section">
-            <h2>Ingredients</h2>
-            <ul className="ingredients-list">
-              {recipe.ingredientLines.map((ingredient, index) => (
-                <li key={index} className="ingredient-item">{ingredient}</li>
-              ))}
-            </ul>
-          </section>
+      <div className={`recipe-content ${(!recipe.isUserCreated || !recipe.totalNutrients) ? 'full-width' : ''}`}>
+        {/* Conditional layout: side-by-side when no nutrition, current layout when nutrition available */}
+        {!recipe.isUserCreated && recipe.totalNutrients ? (
+          // Current layout with nutrition sidebar
+          <>
+            <div className="recipe-main">
+              <section className="ingredients-section">
+                <h2>Ingredients</h2>
+                <ul className="ingredients-list">
+                  {recipe.ingredientLines.map((ingredient, index) => (
+                    <li key={index} className="ingredient-item">{ingredient}</li>
+                  ))}
+                </ul>
+              </section>
 
-          <section className="instructions-section">
-            <h2>Cooking Instructions</h2>
-            {recipe.instructions && recipe.instructions.length > 0 ? (
-              <ol className="instructions-list">
-                {recipe.instructions.map((instruction, index) => (
-                  <li key={index} className="instruction-item">{instruction}</li>
-                ))}
-              </ol>
-            ) : (
-              <div className="no-instructions">
-                <p>Detailed cooking instructions are not available for this recipe.</p>
-                {recipe.url && (
-                  <p>
-                    Please visit the{" "}
-                    <a href={recipe.url} target="_blank" rel="noopener noreferrer" className="original-recipe-link">
-                      original recipe source
-                    </a>{" "}
-                    for complete cooking directions.
-                  </p>
+              <section className="instructions-section">
+                <h2>Cooking Instructions</h2>
+                {recipe.instructions && recipe.instructions.length > 0 ? (
+                  <ol className="instructions-list">
+                    {recipe.instructions.map((instruction, index) => (
+                      <li key={index} className="instruction-item">{instruction}</li>
+                    ))}
+                  </ol>
+                ) : (
+                  <div className="no-instructions">
+                    <p>Detailed cooking instructions are not available for this recipe.</p>
+                    {recipe.url && (
+                      <p>
+                        Please visit the{" "}
+                        <a href={recipe.url} target="_blank" rel="noopener noreferrer" className="original-recipe-link">
+                          original recipe source
+                        </a>{" "}
+                        for complete cooking directions.
+                      </p>
+                    )}
+                  </div>
                 )}
-              </div>
-            )}
-          </section>
-        </div>
-
-        <div className="recipe-sidebar">
-          <section className="nutrition-section">
-            <h2>Nutrition Facts</h2>
-            <div className="nutrition-per-serving">
-              <p>Per serving (serves {recipe.yield})</p>
+              </section>
             </div>
-            
-            {recipe.totalNutrients && (
-              <div className="nutrition-list">
-                {keyNutrients.map(nutrientKey => {
-                  const nutrient = recipe.totalNutrients[nutrientKey];
-                  if (!nutrient) return null;
-                  return (
-                    <div key={nutrientKey} className="nutrition-item">
-                      <span className="nutrition-label">{nutrient.label}</span>
-                      <span className="nutrition-value">{formatNutrient(nutrient)}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
 
-            {recipe.totalDaily && (
-              <div className="daily-values">
-                <h3>% Daily Value</h3>
-                {keyNutrients.map(nutrientKey => {
-                  const daily = recipe.totalDaily[nutrientKey];
-                  if (!daily) return null;
-                  return (
-                    <div key={nutrientKey} className="daily-item">
-                      <span className="daily-label">{daily.label}</span>
-                      <span className="daily-value">{Math.round(daily.quantity)}%</span>
-                    </div>
-                  );
-                })}
+            <div className="recipe-sidebar">
+              <div className="nutrition-section">
+                <h3>Nutrition Facts</h3>
+                <div className="nutrition-grid">
+                  {['ENERC_KCAL', 'FAT', 'FASAT', 'CHOCDF', 'FIBTG', 'SUGAR', 'PROCNT', 'NA'].map(nutrient => {
+                    const nutrientData = recipe.totalNutrients[nutrient];
+                    if (!nutrientData) return null;
+                    
+                    const nutrientNames = {
+                      'ENERC_KCAL': 'Calories',
+                      'FAT': 'Total Fat',
+                      'FASAT': 'Saturated Fat',
+                      'CHOCDF': 'Carbohydrates',
+                      'FIBTG': 'Fiber',
+                      'SUGAR': 'Sugar',
+                      'PROCNT': 'Protein',
+                      'NA': 'Sodium'
+                    };
+                    
+                    return (
+                      <div key={nutrient} className="nutrition-item">
+                        <span className="nutrition-label">{nutrientNames[nutrient]}</span>
+                        <span className="nutrition-value">
+                          {Math.round(nutrientData.quantity)}{nutrientData.unit}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            )}
-          </section>
-        </div>
+            </div>
+          </>
+        ) : (
+          // Side-by-side layout when no nutrition data
+          <div className="recipe-side-by-side">
+            <section className="ingredients-section">
+              <h2>Ingredients</h2>
+              <ul className="ingredients-list">
+                {recipe.ingredientLines.map((ingredient, index) => (
+                  <li key={index} className="ingredient-item">{ingredient}</li>
+                ))}
+              </ul>
+            </section>
+
+            <section className="instructions-section">
+              <h2>Cooking Instructions</h2>
+              {recipe.instructions && recipe.instructions.length > 0 ? (
+                <ol className="instructions-list">
+                  {recipe.instructions.map((instruction, index) => (
+                    <li key={index} className="instruction-item">{instruction}</li>
+                  ))}
+                </ol>
+              ) : (
+                <div className="no-instructions">
+                  <p>Detailed cooking instructions are not available for this recipe.</p>
+                  {recipe.url && (
+                    <p>
+                      Please visit the{" "}
+                      <a href={recipe.url} target="_blank" rel="noopener noreferrer" className="original-recipe-link">
+                        original recipe source
+                      </a>{" "}
+                      for complete cooking directions.
+                    </p>
+                  )}
+                </div>
+              )}
+            </section>
+          </div>
+        )}
       </div>
       
       {/* Comments Section */}
