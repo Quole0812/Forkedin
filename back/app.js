@@ -7,6 +7,7 @@ import createRouter from "./routes/create.js";
 import recipeDisplay from "./routes/RecipeDisplay.js";
 import Users from "./routes/Users.js";
 import Comments from "./routes/Comments.js";
+import Ratings from "./routes/Ratings.js";
 import RecipesByIds from "./routes/RecipesByIds.js";
 import Chat from "./routes/Chat.js";
 // import admin from "firebase-admin"
@@ -41,6 +42,7 @@ app.use("/create", createRouter);
 app.use("/recipedisplay", recipeDisplay);
 app.use("/users", Users);
 app.use("/comments", Comments);
+app.use("/ratings", Ratings);
 app.use("/recipes-by-ids", RecipesByIds);
 app.use("/chat", Chat);
 

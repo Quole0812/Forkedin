@@ -214,4 +214,56 @@ export const commentsAPI = {
     }
     return response.json();
   }
+};
+
+// Ratings API functions
+export const ratingsAPI = {
+  getRatings: async (recipeUri) => {
+    const response = await fetch(`${API_BASE_URL}/ratings/recipe/${encodeURIComponent(recipeUri)}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch ratings');
+    }
+    return response.json();
+  },
+
+  addRating: async (recipeUri, rating) => {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/ratings/recipe/${encodeURIComponent(recipeUri)}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ rating })
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to add rating');
+    }
+    return response.json();
+  },
+
+  updateRating: async (recipeUri, rating) => {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/ratings/recipe/${encodeURIComponent(recipeUri)}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ rating })
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to update rating');
+    }
+    return response.json();
+  },
+
+  deleteRating: async (recipeUri) => {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${API_BASE_URL}/ratings/recipe/${encodeURIComponent(recipeUri)}`, {
+      method: 'DELETE',
+      headers
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to delete rating');
+    }
+    return response.json();
+  }
 }; 

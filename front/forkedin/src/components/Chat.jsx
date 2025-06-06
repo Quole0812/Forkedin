@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowUpward as ArrowIcon, Chat as ChatIcon, Close as CloseIcon } from "@mui/icons-material";
+import { ArrowUpward as ArrowIcon, Chat as ChatIcon, Close as CloseIcon, KeyboardArrowDown as DownArrowIcon } from "@mui/icons-material";
 import "../styles/Chat.css";
 
 import { getAuth } from "firebase/auth";
@@ -9,6 +9,7 @@ export default function Chat({ recipe }) {
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(false);
     const auth = getAuth();
     const chatLogRef = useRef(null);
 
@@ -19,16 +20,45 @@ export default function Chat({ recipe }) {
     }, [messages, expanded]); 
 
     const toggleChat = async () => {
+        if (isAnimating) return; // Prevent multiple clicks during animation
+        
+        setIsAnimating(true);
+        
         const user = auth.currentUser;
         if (!expanded && user) {
             const token = await user.getIdToken();
             fetchChatHistory(user, token);
         }
-        setExpanded(prev => !prev);
+        
+        // Handle closing animation
+        if (expanded) {
+            // Add closing animation class
+            const chatWindow = document.querySelector('.chat-window');
+            if (chatWindow) {
+                chatWindow.classList.add('chat-closing');
+                setTimeout(() => {
+                    setExpanded(false);
+                    setIsAnimating(false);
+                }, 300); // Match animation duration
+            } else {
+                setExpanded(false);
+                setIsAnimating(false);
+            }
+        } else {
+            // Opening the chat
+            setExpanded(true);
+            setTimeout(() => {
+                const chatWindow = document.querySelector('.chat-window');
+                if (chatWindow) {
+                    chatWindow.classList.add('chat-opening');
+                }
+                setIsAnimating(false);
+            }, 50);
+        }
     };
 
     const submitQuestion = async () => {
-        if (!input.trim()) return;
+        if (!input.trim() || loading) return;
 
         const user = auth.currentUser;
         if (!user) {
@@ -63,6 +93,7 @@ export default function Chat({ recipe }) {
         } 
         catch (err) {
             console.error("Chat error:", err);
+            setMessages(prev => [...prev, { role: "assistant", content: "Sorry, I encountered an error. Please try again." }]);
         } 
         finally {
             setLoading(false);
@@ -70,7 +101,10 @@ export default function Chat({ recipe }) {
     };
 
     const handleKeyDown = (e) => {
-        if (e.key === "Enter") submitQuestion();
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            submitQuestion();
+        }
     };
 
     const fetchChatHistory = async (user, token) => {
@@ -96,49 +130,76 @@ export default function Chat({ recipe }) {
 
     return (
         <>
-            {expanded ? (
-                <div className="chat-window">
-                    <button 
-                        className="chat-close-button" 
-                        onClick={toggleChat}
-                        aria-label="Close Chat"
-                    >
-                        <CloseIcon fontSize="small" />
-                    </button>                  
-                        <div className="chat-log" ref={chatLogRef}>
-                            {messages.map((msg, idx) => (
-                                <p key={idx} className={`chat-message ${msg.role}`}>
-                                {msg.role === "assistant" ? "🤖 " : "🧑 "} {msg.content}
-                                </p>
-                            ))}
-                        </div>
+            {/* Chat Window - only show when expanded */}
+            {expanded && (
+                <div className="chat-window chat-opening">
+                    <div className="chat-header">
+                        <h3 className="chat-title">Recipe Assistant</h3>
+                        <button 
+                            className="chat-close-button" 
+                            onClick={toggleChat}
+                            aria-label="Close Chat"
+                            disabled={isAnimating}
+                        >
+                            <CloseIcon fontSize="small" />
+                        </button>
+                    </div>
+                    
+                    <div className="chat-log" ref={chatLogRef}>
+                        {messages.length === 0 ? (
+                            <div className="chat-message bot">
+                                <p>Hello! I'm your recipe assistant. Ask me anything about "{recipe?.label || 'this recipe'}"!</p>
+                            </div>
+                        ) : (
+                            messages.map((msg, idx) => (
+                                <div key={idx} className={`chat-message ${msg.role === "assistant" ? "bot" : "user"}`}>
+                                    {msg.content}
+                                </div>
+                            ))
+                        )}
+                        
+                        {loading && (
+                            <div className="typing-indicator">
+                                <div className="typing-dots">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    
                     <div className="chat-window-input">
                         <input
-                        value={input}
-                        placeholder="Ask a question"
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={handleKeyDown}
+                            value={input}
+                            placeholder="Ask about ingredients, cooking tips, or nutrition..."
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            disabled={loading}
                         />
-                        {input && (
-                        <button
-                            className="chat-send-button"
-                            aria-label="Send Message"
-                            onClick={submitQuestion}
-                        >
-                            <ArrowIcon />
-                        </button>
+                        {input.trim() && (
+                            <button
+                                className="chat-send-button"
+                                aria-label="Send Message"
+                                onClick={submitQuestion}
+                                disabled={loading}
+                            >
+                                <ArrowIcon />
+                            </button>
                         )}
                     </div>
                 </div>
-            ) : (
+            )}
+
+            {/* Chat Button - always visible, changes appearance based on state */}
             <button 
-            className="chat-open-button" 
-            onClick={toggleChat}
-            aria-label="Open Chat"
+                className={`chat-open-button ${expanded ? 'chat-is-open' : ''}`}
+                onClick={toggleChat}
+                aria-label={expanded ? "Close Chat" : "Open Chat"}
+                disabled={isAnimating}
             >
-            <ChatIcon fontSize="medium" />
+                {expanded ? <DownArrowIcon fontSize="medium" /> : <ChatIcon fontSize="medium" />}
             </button>
-        )}
         </>
     );
 }

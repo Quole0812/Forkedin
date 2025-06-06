@@ -1,0 +1,141 @@
+.rating-section {
+  background-color: #fff9db;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border-left: 4px solid #ed7700;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rating-display {
+  margin-bottom: 20px;
+}
+
+.average-rating {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.stars-display {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  font-size: 24px;
+  transition: all 0.2s ease;
+}
+
+.star.filled {
+  color: #ffc107;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.star.empty {
+  color: #e0e0e0;
+}
+
+.star.interactive {
+  cursor: pointer;
+  font-size: 28px;
+}
+
+.star.interactive:hover {
+  transform: scale(1.1);
+  color: #ffb300;
+}
+
+.rating-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.average-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1c3c09;
+}
+
+.rating-count {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.no-ratings {
+  color: #666;
+  font-style: italic;
+}
+
+.user-rating {
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.user-rating h3 {
+  color: #1c3c09;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.rating-input {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.rating-input[disabled="true"] {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.user-rating-text {
+  color: #ed7700;
+  font-weight: bold;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.login-prompt {
+  text-align: center;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.login-prompt p {
+  margin: 0;
+  color: #666;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .average-rating {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .star {
+    font-size: 20px;
+  }
+  
+  .star.interactive {
+    font-size: 24px;
+  }
+  
+  .average-number {
+    font-size: 1.3rem;
+  }
+  
+  .rating-text {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+} 

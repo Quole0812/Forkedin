@@ -178,10 +178,6 @@ section {
   -webkit-overflow-scrolling: touch;
 }
 
-.carousel::-webkit-scrollbar {
-  /* display: none; */
-}
-
 .carousel-item {
   flex: 0 0 500px;
   scroll-snap-align: center;

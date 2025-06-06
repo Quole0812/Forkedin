@@ -2,16 +2,90 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Comments from "../components/Comments";
+import Rating from "../components/Rating";
 import Chat from "../components/Chat";
+import { ratingsAPI } from "../services/api";
+import { useAuth } from "../components/AuthContext";
+import beforeimg from "../assets/bookmark-before-click.png";
+import afterimg from "../assets/bookmark-after-click.png";
 import "../styles/RecipeDetails.css";
 import "../styles/Chat.css";
 
 export default function RecipeDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [averageRating, setAverageRating] = useState(0);
+  const [totalRatings, setTotalRatings] = useState(0);
+  const [user, setUser] = useState(null);
+
+  // Fetch user data
+  useEffect(() => {
+    if (!currentUser || !currentUser.uid) {
+      return;
+    }
+
+    async function fetchUser() {
+      try {
+        const res = await axios.get(
+          `http://localhost:5001/recipedisplay/user/${currentUser.uid}`
+        );
+        setUser(res.data);
+        console.log("User data fetched:", res.data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    }
+
+    fetchUser();
+  }, [currentUser]);
+
+  // Bookmark handler
+  const handleBookmark = async (recipeId) => {
+    if (!currentUser) {
+      alert('Please log in to bookmark recipes');
+      return;
+    }
+
+    const isSaved = user?.saved?.includes(recipeId);
+
+    if (!isSaved) {
+      // Add bookmark
+      try {
+        console.log("Adding bookmark:", recipeId);
+        await axios.put(
+          `http://localhost:5001/recipedisplay/user/${currentUser.uid}/${encodeURIComponent(recipeId)}`
+        );
+
+        setUser((prevUser) => ({
+          ...prevUser,
+          saved: prevUser?.saved
+            ? [...prevUser.saved, recipeId]
+            : [recipeId],
+        }));
+      } catch (error) {
+        console.error("Error adding bookmark:", error);
+      }
+    } else {
+      // Remove bookmark
+      try {
+        console.log("Removing bookmark:", recipeId);
+        await axios.delete(
+          `http://localhost:5001/recipedisplay/user/${currentUser.uid}/${encodeURIComponent(recipeId)}`
+        );
+
+        setUser((prevUser) => ({
+          ...prevUser,
+          saved: prevUser?.saved?.filter(id => id !== recipeId),
+        }));
+      } catch (error) {
+        console.error("Error removing bookmark:", error);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -20,6 +94,17 @@ export default function RecipeDetails() {
         const res = await axios.get(`http://localhost:5001/recipedisplay/recipe/${encodeURIComponent(id)}`);
         setRecipe(res.data.recipe);
         console.log("Recipe data:", res.data.recipe);
+        
+        // Fetch ratings for this recipe
+        if (res.data.recipe?.uri) {
+          try {
+            const ratingsData = await ratingsAPI.getRatings(res.data.recipe.uri);
+            setAverageRating(ratingsData.averageRating || 0);
+            setTotalRatings(ratingsData.totalRatings || 0);
+          } catch (ratingsError) {
+            console.log("No ratings found for this recipe yet");
+          }
+        }
       } catch (error) {
         console.error("Failed to fetch recipe details:", error);
         setError("Failed to load recipe details");
@@ -66,6 +151,24 @@ export default function RecipeDetails() {
 
   const keyNutrients = ['ENERC_KCAL', 'PROCNT', 'FAT', 'CHOCDF', 'FIBTG', 'SUGAR'];
 
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span
+          key={i}
+          className={`stat-star ${i <= Math.round(rating) ? 'filled' : 'empty'}`}
+        >
+          ★
+        </span>
+      );
+    }
+    return stars;
+  };
+
+  // Get the recipe ID for bookmarking
+  const recipeId = recipe.id || recipe.uri;
+
   return (
     <div className="recipe-details-container">
       <Chat recipe={{ ...recipe }}/>
@@ -93,7 +196,20 @@ export default function RecipeDetails() {
         </div>
         
         <div className="recipe-basic-info">
-          <h1 className="recipe-title">{recipe.label}</h1>
+          <div className="recipe-title-container">
+            <h1 className="recipe-title">{recipe.label}</h1>
+            {currentUser && (
+              <div 
+                className="bookmark-icon-details"
+                onClick={() => handleBookmark(recipeId)}
+              >
+                <img 
+                  src={user?.saved?.includes(recipeId) ? afterimg : beforeimg} 
+                  alt="Bookmark" 
+                />
+              </div>
+            )}
+          </div>
           {recipe.isUserCreated && (
             <div className="user-created-badge">
               👨‍🍳 Community Recipe
@@ -123,6 +239,17 @@ export default function RecipeDetails() {
               <div className="stat">
                 <span className="stat-value">{recipe.totalTime}</span>
                 <span className="stat-label">Minutes</span>
+              </div>
+            )}
+            {totalRatings > 0 && (
+              <div className="stat">
+                <div className="stat-value-rating">
+                  <span className="rating-number">{averageRating.toFixed(1)}</span>
+                  <div className="stat-stars">
+                    {renderStars(averageRating)}
+                  </div>
+                </div>
+                <span className="stat-label">({totalRatings} rating{totalRatings !== 1 ? 's' : ''})</span>
               </div>
             )}
           </div>
@@ -300,6 +427,9 @@ export default function RecipeDetails() {
           </div>
         )}
       </div>
+      
+      {/* Rating Section */}
+      <Rating recipeUri={recipe.uri} />
       
       {/* Comments Section */}
       <Comments recipeUri={recipe.uri} />
