@@ -9,7 +9,7 @@ export default function Ingredient({ index, inputsEnabled, data,
 
     return (
         <>
-            {console.log("im in the Ingredient component")}
+            {/* {console.log("im in the Ingredient component")} */}
             <div className='cr-ingredient-row'> 
                 <input 
                     value={data.name}

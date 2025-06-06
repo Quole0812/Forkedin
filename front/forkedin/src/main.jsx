@@ -39,9 +39,10 @@ const router = createBrowserRouter([
         path: 'saved',
         element: <div>Saved Page</div>
       },
-//       {path: '/', element: <Header />},
+
       {path: '/recipedisplay', element: <RecipeDisplay />},
       {path: '/recipedisplay/:id', element: <RecipeDetails />},
+      {path: '/recipe/:id', element: <RecipeDetails />},
     ]
   }
 ])
