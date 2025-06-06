@@ -200,7 +200,7 @@ export default function RecipeDisplay() {
       <div 
         className="card" 
         key={i}
-        onClick={() => handleRecipeClick(recipe.uri)}
+        onClick={() => handleRecipeClick( recipe.id||recipe.uri)}
         style={{ cursor: 'pointer' }}
       >
         <div 
