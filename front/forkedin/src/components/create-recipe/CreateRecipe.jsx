@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Ingredient from './Ingredient.jsx'; 
 import axios from 'axios';
+import { auth } from '../../../firebase.js';
 
 import Header from '../Header.jsx';
 import '../../styles/CreateRecipe.css'
@@ -166,8 +167,19 @@ export default function CreateRecipe() {
         }
 
         try {
+            // Get the current user's ID token
+            const user = auth.currentUser;
+            if (!user) {
+                throw new Error("You must be logged in to create a recipe");
+            }
+            
+            const idToken = await user.getIdToken();
+            
             const response = await axios.post("http://localhost:5001/create", formData, {
-                headers: { "Content-Type": "multipart/form-data" }
+                headers: { 
+                    "Content-Type": "multipart/form-data",
+                    "Authorization": `Bearer ${idToken}`
+                }
             });
             
             // Navigate to the recipe details page using the returned recipe ID
@@ -175,7 +187,6 @@ export default function CreateRecipe() {
             navigate(`/recipe/${recipeId}`);
         } catch (err) {
             console.error("Error uploading recipe:", err);
-            alert("Error creating recipe. Please try again.");
         }
     };
 
