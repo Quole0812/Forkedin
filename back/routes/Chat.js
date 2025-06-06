@@ -58,10 +58,16 @@ router.post("/", verifyToken, async (req, res) => {
     const chatData = chatDoc.data();
     const fullMessages = chatData?.messages || [];
 
+    const systemMessage = {
+        role: "system",
+        content: `You are a helpful cooking assistant. The current recipe is "${recipe.label}". Use this context to answer the user's questions.`,
+    };
+
+
     // call openai
     const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
-        messages: fullMessages,
+        messages: [systemMessage, ...fullMessages],
     });
 
     const assistantReply = response.choices[0].message.content;
@@ -82,6 +88,28 @@ router.post("/", verifyToken, async (req, res) => {
     console.error("Chat error:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
+});
+
+router.post("/history", verifyToken, async (req, res) => {
+    const { recipe } = req.body;
+    const userId = req.user.uid;
+    const recipeId = recipe.id || recipe.label || "unknown_recipe";
+
+    try {
+        const doc = await db
+        .collection("chats")
+        .doc(userId)
+        .collection("recipes")
+        .doc(recipeId)
+        .get();
+
+        const data = doc.data();
+        res.json({ messages: data?.messages || [] });
+    } 
+    catch (err) {
+        console.error("Error fetching history:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 
 export default router;
