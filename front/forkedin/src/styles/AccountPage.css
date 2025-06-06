@@ -140,3 +140,9 @@
   background-color: #d06b15;;
   cursor: not-allowed;
 }
+
+
+.hiddennav {
+  display: none;
+  visibility: hidden;
+}

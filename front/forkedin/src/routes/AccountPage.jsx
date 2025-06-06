@@ -5,9 +5,18 @@ import UserInfoPage from './account/UserInfoPage';
 import MyRecipesPage from './account/MyRecipesPage';
 import SavedPage from './account/SavedPage';
 import AdminViewPage from './account/AdminViewPage';
+import { useAuth } from "../components/AuthContext"
+
+
+
+
 
 
 const AccountPage = () => {
+
+  const { currentUser, logout } = useAuth();
+
+  console.log(currentUser.reloadUserInfo.displayName === "admin");
   return (
     <div className="account-container">
       <aside className="account-sidebar">
@@ -16,7 +25,7 @@ const AccountPage = () => {
             <NavLink to="/account/user" className="account-link">User Info</NavLink>
             <NavLink to="/account/recipes" className="account-link">My Recipes</NavLink>
             <NavLink to="/account/saved" className="account-link">Saved</NavLink>
-            <NavLink to="/account/admin" className="account-link">Admin View</NavLink>
+           {currentUser.reloadUserInfo.displayName === "admin" && <NavLink to="/account/admin" className="account-link">Admin View</NavLink>}
         </nav>
       </aside>
 
