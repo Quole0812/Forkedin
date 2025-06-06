@@ -155,7 +155,9 @@ export default function RecipeDisplay() {
       fetchRecipes2();
     }, []);
 
-    const filtereddbrecipes = dbrecipes.filter(recipe => recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const dbrecipespublished = dbrecipes.filter(recipe => recipe.published !== false);
+
+    const filtereddbrecipes = dbrecipespublished.filter(recipe => recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const displayedRecipes = filterRecipes ? filtereddbrecipes : recipes;
