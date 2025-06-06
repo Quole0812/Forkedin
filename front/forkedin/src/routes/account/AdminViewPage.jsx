@@ -3,10 +3,36 @@ import { useNavigate } from 'react-router-dom';
 import "../../styles/AdminViewPage.css";
 import defaultPfp from "../../assets/pfp.png";
 import foodPlaceholder from "../../assets/food-placeholder.png";
+import { useAuth } from "../../components/AuthContext"
 
 const AdminViewPage = () => {
   const [pendingRecipes, setPendingRecipes] = useState([]);
   const navigate = useNavigate();
+  const { currentUser, logout } = useAuth();
+  // const [user, setUser] = useState(null);
+
+  console.log(currentUser);
+  // useEffect(() => {
+
+  //   if (!currentUser || !currentUser.uid) {
+  //     return;
+  //   }
+
+  //     async function fetchUser() {
+  //       try {
+  //         const res = await axios.get(
+  //           `http://localhost:5001/recipedisplay/user/${currentUser.uid}`
+  //         );
+  //         setUser(res.data);
+  //         console.log("here da user");
+  //         console.log(res.data);
+  //       } catch (error) {
+  //         console.error("Error fetching user:", error);
+  //       } 
+  //     }
+
+  //     fetchUser();
+  //   }, [currentUser]); 
 
   useEffect(() => {
     const fetchUnpublished = async () => {
@@ -18,8 +44,9 @@ const AdminViewPage = () => {
         const enrichedData = await Promise.all(
           data.map(async (recipe) => {
             try {
-              const userRes = await fetch(`http://localhost:5001/users/${recipe.authorId}`);
+              const userRes = await fetch(`http://localhost:5001/users/${recipe.createdBy}`);
               const userData = await userRes.json();
+              // console.log(user)
               return {
                 ...recipe,
                 authorName: userData.fullName || "Unknown User",
@@ -51,8 +78,15 @@ const AdminViewPage = () => {
       console.error("Failed to publish recipe", err);
     }
   };
-
-  return (
+  // console.log(currentUser.reloadUserInfo.displayName);
+  if (currentUser.reloadUserInfo.displayName !== "admin") {
+    return (
+      <>
+      {/* <p>lmfao u not even admin gang</p> */}
+      </>
+    )
+  } else {
+    return (
     <div className="admin-list">
       <h2>Pending Recipes</h2>
       {pendingRecipes.length > 0 ? (
@@ -81,6 +115,9 @@ const AdminViewPage = () => {
       )}
     </div>
   );
+  }
+
+  
 };
 
 export default AdminViewPage;

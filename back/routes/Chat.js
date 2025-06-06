@@ -58,9 +58,17 @@ router.post("/", verifyToken, async (req, res) => {
     const chatData = chatDoc.data();
     const fullMessages = chatData?.messages || [];
 
+    console.log(recipe);
+
     const systemMessage = {
         role: "system",
-        content: `You are a helpful cooking assistant. The current recipe is "${recipe.label}". Use this context to answer the user's questions.`,
+        content: `You are a helpful cooking assistant. Use the following recipe context to help answer the user's questions:\n\n` +
+           `Recipe: ${recipe.label || recipe.name || "Unnamed"}\n` +
+           `Ingredients: ${recipe.ingredients?.map(i => typeof i === "string" ? i : i.text).join(", ") || "N/A"}\n` +
+           `Calories: ${Math.round(recipe.calories || 0)}\n` +
+           `Servings: ${recipe.yield || "N/A"}\n` +
+           `${recipe.dietLabels?.length ? `Diet Labels: ${recipe.dietLabels.join(", ")}` : ""}\n` +
+           `${recipe.healthLabels?.length ? `Health Labels: ${recipe.healthLabels.join(", ")}` : ""}\n`
     };
 
 
