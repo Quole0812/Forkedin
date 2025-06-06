@@ -135,9 +135,6 @@ router.post("/", upload.single("image"), async (req, res) => {
             // Add timestamp for user-created recipes
             createdAt: new Date().toISOString(),
             isUserCreated: true,
-            
-            // Generate a unique URI for user recipes
-            uri: `user_recipe_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
         
         const ref = await db.collection("recipes").add(post);
