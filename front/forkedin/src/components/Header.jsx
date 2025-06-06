@@ -34,7 +34,11 @@ export default function Header() {
             <nav className="nav-links">
                 <Link to="/" className={isActive('/') ? 'nav-link active' : 'nav-link'}>Home</Link>
                 <Link to="/recipedisplay" className={isActive('/recipedisplay') ? 'nav-link active' : 'nav-link'}>Recipes</Link>
-                <Link to="/create" className={isActive('/create') ? 'nav-link active' : 'nav-link'}>Create</Link>
+                {currentUser ? (
+                    <Link to="/create" className={isActive('/create') ? 'nav-link active' : 'nav-link'}>Create</Link>
+                    ) : (
+                    <span className="nav-link disabled" title="Sign in to create recipes">Create</span>
+                    )}
                         </nav>
             
             <div className="header-actions">
