@@ -187,7 +187,7 @@ export default function RecipeDetails() {
         </div>
       </div>
 
-      <div className={`recipe-content ${(!recipe.isUserCreated || !recipe.totalNutrients) ? 'full-width' : ''}`}>
+      <div className={`recipe-content ${(recipe.isUserCreated || !recipe.totalNutrients) ? 'full-width' : ''}`}>
         {/* Conditional layout: side-by-side when no nutrition, current layout when nutrition available */}
         {!recipe.isUserCreated && recipe.totalNutrients ? (
           // Current layout with nutrition sidebar
@@ -224,26 +224,15 @@ export default function RecipeDetails() {
                     )}
                   </div>
                 )}
-
-              </div>
-            )}
-          </section>
-        </div>
-
-        <div className="recipe-sidebar">
-          
-          <section className="nutrition-section">
-            <h2>Nutrition Facts</h2>
-            <div className="nutrition-per-serving">
-              <p>Per serving (serves {recipe.yield})</p>
-
               </section>
-
             </div>
 
             <div className="recipe-sidebar">
-              <div className="nutrition-section">
-                <h3>Nutrition Facts</h3>
+              <section className="nutrition-section">
+                <h2>Nutrition Facts</h2>
+                <div className="nutrition-per-serving">
+                  <p>Per serving (serves {recipe.yield})</p>
+                </div>
                 <div className="nutrition-grid">
                   {['ENERC_KCAL', 'FAT', 'FASAT', 'CHOCDF', 'FIBTG', 'SUGAR', 'PROCNT', 'NA'].map(nutrient => {
                     const nutrientData = recipe.totalNutrients[nutrient];
@@ -270,7 +259,7 @@ export default function RecipeDetails() {
                     );
                   })}
                 </div>
-              </div>
+              </section>
             </div>
           </>
         ) : (

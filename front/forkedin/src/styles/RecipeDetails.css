@@ -6,6 +6,18 @@
   line-height: 1.6;
 }
 
+/* More specific selectors to avoid interfering with grid layout */
+.recipe-details-container .recipe-header,
+.recipe-details-container .back-button,
+.recipe-details-container .cautions-section-header,
+.recipe-details-container .ingredients-section,
+.recipe-details-container .instructions-section,
+.recipe-details-container .nutrition-section {
+  height: fit-content !important;
+  min-height: unset !important;
+}
+
+
 /* .section {
   height:fit-content;
 } */
@@ -256,6 +268,12 @@
   grid-template-columns: 2fr 1fr;
   gap: 40px;
   margin-bottom: 40px;
+}
+
+/* Force grid layout when we have both recipe-main and recipe-sidebar */
+.recipe-content:has(.recipe-main):has(.recipe-sidebar) {
+  display: grid !important;
+  grid-template-columns: 2fr 1fr !important;
 }
 
 /* When recipe-content contains side-by-side layout, use full width */

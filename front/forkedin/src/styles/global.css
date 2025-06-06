@@ -1,0 +1,10 @@
+section[class*="Toastify"],
+div[class*="Toastify"]:not(.Toastify__toast):not(.Toastify__toast-container) {
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+} 

@@ -13,7 +13,8 @@ import CreateRecipe from './components/create-recipe/CreateRecipe.jsx';
 import Home from './routes/Home.jsx';
 import AccountPage from './routes/AccountPage.jsx';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// Import global CSS fixes for Toastify
+import './styles/global.css';
 
 
 const router = createBrowserRouter([
